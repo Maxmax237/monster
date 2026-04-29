@@ -389,8 +389,8 @@
     <script>
         // ==================== CONFIGURATION SUPABASE ====================
         // !!! REMPLACEZ PAR VOS IDENTIFIANTS SUPABASE !!!
-        const SUPABASE_URL = 'https://votre-projet.supabase.co';
-        const SUPABASE_ANON_KEY = 'votre-clé-anon-publique';
+        const SUPABASE_URL = ' https://imehlftbduirseqjocxk.supabase.com';
+        const SUPABASE_ANON_KEY = 'sb_publishable_jabNx1aY2Q3klwv8R-9o-w_CwDvHLV3';
         
         let supabase = null;
         let currentUser = null;
@@ -398,13 +398,13 @@
         
         // Initialiser Supabase
         function initSupabase() {
-            if (SUPABASE_URL.includes('votre-projet')) {
+            if (SUPABASE_URL.includes('menagepro')) {
                 console.warn('⚠️ Configuration Supabase requise');
                 alert('⚠️ Veuillez configurer Supabase avec vos identifiants!\n\n1. Allez sur supabase.com\n2. Créez un projet\n3. Copiez URL et clé anon\n4. Remplacez dans le code');
                 useLocalMode();
                 return false;
             }
-            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            supabase = window.supabase.createClient( https://imehlftbduirseqjocxk.supabase.com, sb_publishable_jabNx1aY2Q3klwv8R-9o-w_CwDvHLV3);
             console.log('✅ Supabase connecté');
             return true;
         }
