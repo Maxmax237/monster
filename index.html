@@ -3,36 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MenagePro - Ménage & Entretien Cameroun</title>
+    <title>MenagePro - Synchronisé en ligne</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <!-- Supabase JS -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: #0a0a0a;
             color: #ffffff;
         }
-
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at 20% 30%, rgba(212,175,55,0.08), transparent 50%),
-                        radial-gradient(circle at 80% 70%, rgba(255,215,0,0.05), transparent 40%);
-            z-index: -1;
-            pointer-events: none;
-        }
-
         .main-nav {
             background: rgba(10, 10, 10, 0.95);
             backdrop-filter: blur(10px);
@@ -47,13 +27,11 @@
             z-index: 1000;
             border-bottom: 1px solid rgba(212, 175, 55, 0.3);
         }
-
         .logo {
             display: flex;
             align-items: center;
             gap: 12px;
         }
-
         .logo-icon {
             width: 50px;
             height: 50px;
@@ -64,24 +42,9 @@
             justify-content: center;
             font-size: 28px;
         }
-
-        .logo-text h2 {
-            font-size: 24px;
-            color: #D4AF37;
-            letter-spacing: 2px;
-        }
-
-        .logo-text p {
-            font-size: 10px;
-            color: rgba(255,255,255,0.6);
-        }
-
-        .nav-buttons {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-
+        .logo-text h2 { font-size: 24px; color: #D4AF37; letter-spacing: 2px; }
+        .logo-text p { font-size: 10px; color: rgba(255,255,255,0.6); }
+        .nav-buttons { display: flex; gap: 15px; flex-wrap: wrap; }
         .nav-btn {
             padding: 10px 25px;
             border: 2px solid rgba(212, 175, 55, 0.5);
@@ -93,40 +56,56 @@
             font-size: 14px;
             color: white;
         }
-
-        .nav-btn:hover {
-            background: #D4AF37;
-            border-color: #D4AF37;
-            color: #0a0a0a;
+        .nav-btn:hover { background: #D4AF37; border-color: #D4AF37; color: #0a0a0a; }
+        .user-info {
+            background: rgba(212, 175, 55, 0.2);
+            padding: 8px 20px;
+            border-radius: 30px;
+            color: #D4AF37;
+            font-size: 14px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
         }
-
-        .user-type-selector {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .user-type-btn {
-            flex: 1;
-            padding: 12px;
-            background: rgba(30,30,30,0.8);
-            border: 2px solid rgba(212,175,55,0.3);
-            border-radius: 10px;
+        .logout-btn {
+            background: rgba(212, 175, 55, 0.2);
+            border: 1px solid rgba(212, 175, 55, 0.5);
+            color: #D4AF37;
+            padding: 8px 16px;
+            border-radius: 30px;
             cursor: pointer;
-            text-align: center;
             transition: all 0.3s;
         }
-
-        .user-type-btn.active {
-            background: #D4AF37;
-            color: #0a0a0a;
-            border-color: #D4AF37;
+        .logout-btn:hover { background: #D4AF37; color: #0a0a0a; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 30px; }
+        .hero {
+            text-align: center;
+            padding: 60px 20px;
+            background: linear-gradient(135deg, rgba(10,10,10,0.9) 0%, rgba(20,20,20,0.95) 100%);
+            border-radius: 30px;
+            margin-bottom: 40px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
         }
-
-        .user-type-btn:hover {
-            border-color: #D4AF37;
+        .hero h1 {
+            font-size: 56px;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #D4AF37 0%, #FFD700 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
-
+        .hero p { font-size: 18px; margin-bottom: 30px; color: rgba(255,255,255,0.7); }
+        .hero-buttons { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
+        .hero-btn {
+            padding: 15px 35px;
+            background: transparent;
+            border: 2px solid #D4AF37;
+            color: #D4AF37;
+            border-radius: 50px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .hero-btn:hover { background: #D4AF37; color: #0a0a0a; transform: translateY(-5px); }
+        .hero-btn-primary { background: #D4AF37; color: #0a0a0a; }
         .form-container {
             max-width: 600px;
             margin: 50px auto;
@@ -136,13 +115,7 @@
             border-radius: 20px;
             border: 1px solid rgba(212, 175, 55, 0.3);
         }
-
-        .form-container h2 {
-            text-align: center;
-            margin-bottom: 30px;
-            color: #D4AF37;
-        }
-
+        .form-container h2 { text-align: center; margin-bottom: 30px; color: #D4AF37; }
         input, select, textarea {
             width: 100%;
             padding: 12px 15px;
@@ -153,12 +126,7 @@
             font-size: 16px;
             color: white;
         }
-
-        input:focus, select:focus {
-            outline: none;
-            border-color: #D4AF37;
-        }
-
+        input:focus, select:focus { outline: none; border-color: #D4AF37; }
         button {
             width: 100%;
             padding: 14px;
@@ -172,28 +140,15 @@
             margin-top: 20px;
             transition: all 0.3s;
         }
-
-        button:hover {
-            background: #FFD700;
-            transform: translateY(-2px);
-        }
-
-        .btn-location {
-            background: #3498db;
-            margin-top: 5px;
-        }
-
-        .btn-location:hover {
-            background: #2980b9;
-        }
-
+        button:hover { background: #FFD700; transform: translateY(-2px); }
+        .btn-location { background: #3498db; margin-top: 5px; }
+        .btn-location:hover { background: #2980b9; }
         .payment-group, .service-group {
             background: rgba(0,0,0,0.3);
             border-radius: 10px;
             padding: 15px;
             margin: 10px 0;
         }
-
         .payment-option, .service-option {
             display: flex;
             align-items: center;
@@ -204,12 +159,7 @@
             border-radius: 8px;
             cursor: pointer;
         }
-
-        .payment-option input, .service-option input {
-            width: auto;
-            margin: 0;
-        }
-
+        .payment-option input, .service-option input { width: auto; margin: 0; }
         .table-container {
             background: rgba(20, 20, 20, 0.9);
             border-radius: 20px;
@@ -217,23 +167,9 @@
             border: 1px solid rgba(212, 175, 55, 0.3);
             margin-bottom: 30px;
         }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th, td {
-            padding: 15px;
-            text-align: left;
-            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
-        }
-
-        th {
-            background: rgba(212, 175, 55, 0.1);
-            color: #D4AF37;
-        }
-
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid rgba(212, 175, 55, 0.2); }
+        th { background: rgba(212, 175, 55, 0.1); color: #D4AF37; }
         .badge {
             padding: 4px 12px;
             border-radius: 20px;
@@ -244,8 +180,6 @@
         .badge-pending { background: #f39c12; color: #0a0a0a; }
         .badge-accepted { background: #27ae60; color: white; }
         .badge-rejected { background: #e74c3c; color: white; }
-        .badge-matched { background: #8e44ad; color: white; }
-
         .btn-sm {
             padding: 5px 12px;
             font-size: 12px;
@@ -256,15 +190,12 @@
         .btn-success { background: #27ae60; }
         .btn-danger { background: #e74c3c; }
         .btn-info { background: #3498db; }
-        .btn-warning { background: #f39c12; }
-
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px;
             margin-bottom: 30px;
         }
-
         .stat-card {
             background: rgba(20, 20, 20, 0.9);
             padding: 25px;
@@ -272,21 +203,10 @@
             text-align: center;
             border: 1px solid rgba(212, 175, 55, 0.3);
         }
-
-        .stat-number {
-            font-size: 36px;
-            font-weight: bold;
-            color: #D4AF37;
-        }
-
+        .stat-number { font-size: 36px; font-weight: bold; color: #D4AF37; }
         .page { display: none; }
         .page.active { display: block; animation: fadeIn 0.5s ease; }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         footer {
             text-align: center;
             padding: 30px;
@@ -294,35 +214,17 @@
             margin-top: 40px;
             border-top: 1px solid rgba(212, 175, 55, 0.2);
         }
-
         .success-msg { color: #27ae60; background: rgba(39,174,96,0.1); padding: 10px; border-radius: 10px; margin: 10px 0; }
         .error-msg { color: #e74c3c; background: rgba(231,76,60,0.1); padding: 10px; border-radius: 10px; margin: 10px 0; }
         .info-msg { color: #f39c12; background: rgba(243,156,18,0.1); padding: 10px; border-radius: 10px; margin: 10px 0; }
-
-        .refresh-btn {
-            background: #D4AF37;
-            color: #0a0a0a;
-            padding: 8px 20px;
-            width: auto;
-            margin: 10px;
-            display: inline-block;
-        }
-
-        .match-card {
-            background: rgba(0,0,0,0.3);
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 15px;
-            border-left: 4px solid #D4AF37;
-        }
-
-        .distance-badge {
-            background: #3498db;
+        .online-badge {
+            background: #27ae60;
             padding: 5px 10px;
             border-radius: 20px;
-            font-size: 12px;
+            font-size: 11px;
+            display: inline-block;
+            margin-left: 10px;
         }
-
         @media (max-width: 768px) {
             .container { padding: 15px; }
             .hero h1 { font-size: 32px; }
@@ -341,11 +243,12 @@
         </div>
         <div class="nav-buttons" id="navButtons">
             <button class="nav-btn" onclick="showPage('adminLogin')">👑 ADMIN</button>
-            <button class="nav-btn" onclick="showRegister()">📝 S'INSCRIRE</button>
-            <button class="nav-btn" onclick="showLogin()">🔐 SE CONNECTER</button>
+            <button class="nav-btn" onclick="showPage('candidateRegister')">📝 POSTULER</button>
+            <button class="nav-btn" onclick="showPage('candidateLogin')">🔐 CONNEXION</button>
         </div>
         <div id="userInfo" style="display: none;">
             <span id="userNameDisplay" class="user-info"></span>
+            <span id="syncStatus" class="user-info" style="background: #27ae60;">🟢 Synchronisé</span>
             <button class="logout-btn" onclick="logout()">DÉCONNEXION</button>
         </div>
     </div>
@@ -355,93 +258,111 @@
         <div id="homePage" class="page active">
             <div class="hero">
                 <h1>🧹 MENAGEPRO</h1>
-                <p>Mettez en relation propriétaires et femmes de ménage qualifiées • Douala & Yaoundé</p>
+                <p>L'excellence au service de votre intérieur • Douala & Yaoundé</p>
                 <div class="hero-buttons">
                     <button class="hero-btn hero-btn-primary" onclick="showPage('adminLogin')">👑 ADMIN</button>
-                    <button class="hero-btn" onclick="showRegister()">📝 S'INSCRIRE</button>
-                    <button class="hero-btn" onclick="showLogin()">🔐 SE CONNECTER</button>
+                    <button class="hero-btn" onclick="showPage('candidateRegister')">📝 POSTULER</button>
+                    <button class="hero-btn" onclick="showPage('candidateLogin')">🔐 CONNEXION</button>
                 </div>
             </div>
         </div>
 
-        <!-- CHOIX TYPE INSCRIPTION -->
-        <div id="registerChoicePage" class="page">
+        <!-- LOGIN ADMIN -->
+        <div id="adminLoginPage" class="page">
             <div class="form-container">
-                <h2>📝 INSCRIPTION</h2>
-                <div class="user-type-selector">
-                    <div class="user-type-btn" onclick="setUserType('candidate')">
-                        <i class="fas fa-female"></i><br>Femme de ménage
-                    </div>
-                    <div class="user-type-btn" onclick="setUserType('owner')">
-                        <i class="fas fa-home"></i><br>Propriétaire
-                    </div>
-                </div>
-                <div id="registerFormContainer"></div>
-                <div style="text-align:center; margin-top:20px;">
-                    <a href="#" onclick="showLogin(); return false;" style="color:#D4AF37;">Déjà un compte ? Se connecter</a>
-                </div>
-            </div>
-        </div>
-
-        <!-- CONNEXION -->
-        <div id="loginPage" class="page">
-            <div class="form-container">
-                <h2>🔐 CONNEXION</h2>
-                <div class="user-type-selector">
-                    <div class="user-type-btn" onclick="setLoginType('candidate')">
-                        <i class="fas fa-female"></i><br>Femme de ménage
-                    </div>
-                    <div class="user-type-btn" onclick="setLoginType('owner')">
-                        <i class="fas fa-home"></i><br>Propriétaire
-                    </div>
-                </div>
-                <form id="loginForm">
-                    <input type="email" id="loginEmail" placeholder="Email" required>
-                    <input type="password" id="loginPassword" placeholder="Mot de passe" required>
+                <h2>🔐 ADMINISTRATION</h2>
+                <form id="adminLoginForm">
+                    <input type="email" id="adminEmail" placeholder="Email" required>
+                    <input type="password" id="adminPassword" placeholder="Mot de passe" required>
                     <button type="submit">SE CONNECTER</button>
                 </form>
-                <div id="loginMsg"></div>
-                <div style="text-align:center; margin-top:20px;">
-                    <a href="#" onclick="showRegister(); return false;" style="color:#D4AF37;">Pas encore inscrit ? Créer un compte</a>
-                </div>
+                <div id="adminLoginMsg"></div>
             </div>
         </div>
 
         <!-- DASHBOARD ADMIN -->
         <div id="adminDashboardPage" class="page">
-            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
-                <h2 style="color:#D4AF37;">👑 TABLEAU DE BORD</h2>
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; margin-bottom: 20px;">
+                <h2 style="color:#D4AF37;">👑 TABLEAU DE BORD <span class="online-badge" id="realtimeBadge">🟢 EN LIGNE</span></h2>
                 <button class="refresh-btn" onclick="loadAdminDashboard()"><i class="fas fa-sync-alt"></i> Actualiser</button>
             </div>
             <div class="stats-grid" id="adminStats"></div>
             
             <div class="table-container">
-                <h3 style="padding: 20px;">👩‍🍳 CANDIDATES (Femmes de ménage)</h3>
+                <h3 style="padding: 20px;">👩‍🍳 CANDIDATES INSCRITES</h3>
                 <div style="overflow-x: auto;">
-                    <table>
-                        <thead><tr><th>Nom</th><th>Email</th><th>Téléphone</th><th>Ville</th><th>Statut</th><th>Actions</th></tr></thead>
-                        <tbody id="adminCandidatesTable"></tbody>
-                    </table>
+                    <table><thead><tr><th>Nom</th><th>Email</th><th>Téléphone</th><th>Ville</th><th>Statut</th><th>Actions</th></tr></thead>
+                    <tbody id="adminCandidatesTable"></tbody></table>
                 </div>
             </div>
 
             <div class="table-container">
-                <h3 style="padding: 20px;">🏠 PROPRIÉTAIRES</h3>
+                <h3 style="padding: 20px;">🏠 PROPRIÉTAIRES INSCRITS</h3>
                 <div style="overflow-x: auto;">
-                    <table>
-                        <thead><tr><th>Nom</th><th>Email</th><th>Téléphone</th><th>Ville</th><th>Statut</th><th>Actions</th></tr></thead>
-                        <tbody id="adminOwnersTable"></tbody>
-                    </table>
+                    <table><thead><tr><th>Nom</th><th>Email</th><th>Téléphone</th><th>Ville</th><th>Statut</th><th>Actions</th></tr></thead>
+                    <tbody id="adminOwnersTable"></tbody></table>
                 </div>
             </div>
+        </div>
 
-            <div class="table-container">
-                <h3 style="padding: 20px;">🤝 MATCHES & DEMANDES</h3>
-                <div style="overflow-x: auto;">
-                    <table>
-                        <thead><tr><th>ID</th><th>Propriétaire</th><th>Candidate</th><th>Distance (km)</th><th>Statut</th><th>Actions</th></tr></thead>
-                        <tbody id="matchesTable"></tbody>
-                    </table>
+        <!-- INSCRIPTION CANDIDATE -->
+        <div id="candidateRegisterPage" class="page">
+            <div class="form-container">
+                <h2>📝 INSCRIPTION - FEMME DE MÉNAGE</h2>
+                <form id="candidateRegisterForm">
+                    <input type="text" id="regNom" placeholder="Nom complet" required>
+                    <input type="email" id="regEmail" placeholder="Email" required>
+                    <input type="password" id="regPassword" placeholder="Mot de passe (6+)" required>
+                    <input type="tel" id="regTelephone" placeholder="Téléphone (ex: 690000000)" required>
+                    <input type="number" id="regAge" placeholder="Âge" min="18" max="60" required>
+                    <input type="text" id="regVille" placeholder="Ville" required>
+                    <textarea id="regCompetences" rows="3" placeholder="Compétences (nettoyage, repassage, cuisine...)"></textarea>
+                    <input type="number" id="regExperience" placeholder="Années d'expérience" step="0.5">
+                    
+                    <div class="payment-group">
+                        <h4 style="color:#D4AF37;">💰 MODE DE PAIEMENT</h4>
+                        <div class="payment-option">
+                            <input type="radio" name="paymentMethod" id="paymentOrange" value="orange_money" required>
+                            <label for="paymentOrange">📱 Orange Money - <input type="tel" id="orangeNumber" placeholder="6XXXXXXXX" style="width:140px; display:inline-block;"></label>
+                        </div>
+                        <div class="payment-option">
+                            <input type="radio" name="paymentMethod" id="paymentMTN" value="mtn_money" required>
+                            <label for="paymentMTN">📱 MTN Mobile Money - <input type="tel" id="mtnNumber" placeholder="6XXXXXXXX" style="width:140px; display:inline-block;"></label>
+                        </div>
+                    </div>
+
+                    <div style="margin: 20px 0; padding: 15px; background: rgba(52,152,219,0.1); border-radius: 10px;">
+                        <h4 style="color:#3498db;">📍 GÉOLOCALISATION</h4>
+                        <button type="button" class="btn-location" onclick="getCandidateLocation()">
+                            <i class="fas fa-location-dot"></i> 📍 Obtenir ma position
+                        </button>
+                        <div id="locationStatus"></div>
+                        <input type="hidden" id="regLatitude">
+                        <input type="hidden" id="regLongitude">
+                        <input type="text" id="regAddressDetail" placeholder="Adresse précise">
+                    </div>
+                    
+                    <button type="submit">📝 S'INSCRIRE</button>
+                </form>
+                <div id="registerMsg"></div>
+                <div style="text-align:center; margin-top:20px;">
+                    <a href="#" onclick="showPage('candidateLogin'); return false;" style="color:#D4AF37;">Déjà inscrite ? Se connecter</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- CONNEXION CANDIDATE -->
+        <div id="candidateLoginPage" class="page">
+            <div class="form-container">
+                <h2>🔐 CONNEXION CANDIDATE</h2>
+                <form id="candidateLoginForm">
+                    <input type="email" id="candEmail" placeholder="Email" required>
+                    <input type="password" id="candPassword" placeholder="Mot de passe" required>
+                    <button type="submit">SE CONNECTER</button>
+                </form>
+                <div id="candidateLoginMsg"></div>
+                <div style="text-align:center; margin-top:20px;">
+                    <a href="#" onclick="showPage('candidateRegister'); return false;" style="color:#D4AF37;">Pas encore inscrite ? Postuler</a>
                 </div>
             </div>
         </div>
@@ -451,89 +372,48 @@
             <h2 style="color:#D4AF37;">👩‍🍳 MON ESPACE</h2>
             <div class="stats-grid">
                 <div class="stat-card"><div class="stat-number" id="candStatus">-</div><div>Statut</div></div>
-                <div class="stat-card"><div class="stat-number" id="candMatches">0</div><div>Demandes reçues</div></div>
+                <div class="stat-card"><div class="stat-number" id="candMatches">0</div><div>Missions</div></div>
             </div>
             <div class="table-container">
                 <h3 style="padding: 20px;">📋 MES INFORMATIONS</h3>
                 <div style="padding: 20px;" id="candidateInfo"></div>
             </div>
-            <div class="table-container">
-                <h3 style="padding: 20px;">🤝 DEMANDES DE PROPRIÉTAIRES</h3>
-                <div id="candidateRequests" style="padding: 20px;"></div>
-            </div>
-        </div>
-
-        <!-- DASHBOARD OWNER -->
-        <div id="ownerDashboardPage" class="page">
-            <h2 style="color:#D4AF37;">🏠 MON ESPACE</h2>
-            <div class="stats-grid">
-                <div class="stat-card"><div class="stat-number" id="ownerStatus">-</div><div>Statut</div></div>
-                <div class="stat-card"><div class="stat-number" id="ownerMatches">0</div><div>Candidates trouvées</div></div>
-            </div>
-            <div class="table-container">
-                <h3 style="padding: 20px;">📋 MES INFORMATIONS</h3>
-                <div style="padding: 20px;" id="ownerInfo"></div>
-            </div>
-            <div class="table-container">
-                <h3 style="padding: 20px;">👩‍🍳 CANDIDATES DISPONIBLES PROCHES</h3>
-                <button class="btn-location" style="width: auto; margin: 0 20px 20px 20px;" onclick="findNearbyCandidates()">
-                    <i class="fas fa-search-location"></i> Trouver des candidates proches
-                </button>
-                <div id="nearbyCandidates" style="padding: 20px;"></div>
-            </div>
         </div>
     </div>
 
     <footer>
-        <p>© 2024 MENAGEPRO CAMEROUN • TOUS DROITS RÉSERVÉS</p>
-        <p>Service de mise en relation • Géolocalisation • Notifications automatiques</p>
+        <p>© 2024 MENAGEPRO CAMEROUN • Synchronisation en ligne en temps réel</p>
+        <p>Toutes les inscriptions sont visibles instantanément sur tous les appareils</p>
     </footer>
 
     <script>
-        // Configuration Supabase (À remplacer par vos identifiants)
+        // ==================== CONFIGURATION SUPABASE ====================
+        // !!! REMPLACEZ PAR VOS IDENTIFIANTS SUPABASE !!!
         const SUPABASE_URL = 'https://votre-projet.supabase.co';
-        const SUPABASE_ANON_KEY = 'votre-clé-anon';
+        const SUPABASE_ANON_KEY = 'votre-clé-anon-publique';
         
         let supabase = null;
         let currentUser = null;
         let currentUserType = null;
-        let selectedUserType = null;
-        let selectedLoginType = null;
-
-        // Coordonnées des villes
-        const cityCoordinates = {
-            'douala': { lat: 4.051056, lng: 9.767869 },
-            'yaoundé': { lat: 3.848033, lng: 11.502075 },
-            'bafoussam': { lat: 5.480789, lng: 10.417631 }
-        };
-
-        // Initialisation Supabase
-        async function initSupabase() {
+        
+        // Initialiser Supabase
+        function initSupabase() {
             if (SUPABASE_URL.includes('votre-projet')) {
                 console.warn('⚠️ Configuration Supabase requise');
-                // Mode démo - stockage local
-                useLocalStorage();
-                return;
+                alert('⚠️ Veuillez configurer Supabase avec vos identifiants!\n\n1. Allez sur supabase.com\n2. Créez un projet\n3. Copiez URL et clé anon\n4. Remplacez dans le code');
+                useLocalMode();
+                return false;
             }
             supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-            await createTables();
+            console.log('✅ Supabase connecté');
+            return true;
         }
-
-        function useLocalStorage() {
-            console.log('📦 Mode démo - stockage local');
-            initLocalData();
-        }
-
-        function initLocalData() {
-            if (!localStorage.getItem('candidates')) {
-                localStorage.setItem('candidates', JSON.stringify([]));
-            }
-            if (!localStorage.getItem('owners')) {
-                localStorage.setItem('owners', JSON.stringify([]));
-            }
-            if (!localStorage.getItem('matches')) {
-                localStorage.setItem('matches', JSON.stringify([]));
-            }
+        
+        // Mode de secours localStorage
+        function useLocalMode() {
+            console.log('📦 Mode local - données stockées dans le navigateur uniquement');
+            if (!localStorage.getItem('candidates')) localStorage.setItem('candidates', JSON.stringify([]));
+            if (!localStorage.getItem('owners')) localStorage.setItem('owners', JSON.stringify([]));
             if (!localStorage.getItem('admin')) {
                 localStorage.setItem('admin', JSON.stringify({
                     email: "admin@menagepro.com",
@@ -542,50 +422,8 @@
                 }));
             }
         }
-
-        // ==================== NOTIFICATIONS ====================
-        async function sendWhatsApp(phone, message) {
-            const formattedPhone = phone.startsWith('6') ? '237' + phone : phone;
-            const whatsappUrl = `https://wa.me/${formattedPhone}?text=${encodeURIComponent(message)}`;
-            window.open(whatsappUrl, '_blank');
-            return true;
-        }
-
-        async function sendSMS(phone, message) {
-            // Simulation SMS - En production, utilisez Twilio ou un service SMS
-            console.log(`📱 SMS à ${phone}: ${message}`);
-            alert(`📱 SMS simulé à ${phone}\nMessage: ${message}`);
-            return true;
-        }
-
-        async function sendEmail(email, subject, message) {
-            // Simulation Email - En production, utilisez EmailJS ou un serveur SMTP
-            console.log(`📧 Email à ${email}: ${subject} - ${message}`);
-            alert(`📧 Email simulé à ${email}\nSujet: ${subject}\nMessage: ${message}`);
-            return true;
-        }
-
-        async function sendNotifications(user, message, type) {
-            if (user.whatsapp && user.whatsapp !== 'non') {
-                await sendWhatsApp(user.telephone, message);
-            }
-            if (user.sms && user.sms !== 'non') {
-                await sendSMS(user.telephone, message);
-            }
-            if (user.email && user.email !== 'non') {
-                await sendEmail(user.email, type === 'candidate' ? '✅ Sélectionnée pour un poste' : '🏠 Une ménagère disponible', message);
-            }
-        }
-
+        
         // ==================== GÉOLOCALISATION ====================
-        function calculateDistance(lat1, lon1, lat2, lon2) {
-            const R = 6371;
-            const dLat = (lat2 - lat1) * Math.PI / 180;
-            const dLon = (lon2 - lon1) * Math.PI / 180;
-            const a = Math.sin(dLat/2)**2 + Math.cos(lat1 * Math.PI/180) * Math.cos(lat2 * Math.PI/180) * Math.sin(dLon/2)**2;
-            return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-        }
-
         function getCurrentPosition() {
             return new Promise((resolve, reject) => {
                 if (!navigator.geolocation) {
@@ -598,144 +436,11 @@
                 });
             });
         }
-
-        // ==================== FORMULAIRES ====================
-        function showRegister() {
-            selectedUserType = null;
-            document.getElementById('registerChoicePage').classList.add('active');
-            document.getElementById('homePage').classList.remove('active');
-            document.getElementById('loginPage').classList.remove('active');
-            document.getElementById('adminDashboardPage').classList.remove('active');
-            document.getElementById('candidateDashboardPage').classList.remove('active');
-            document.getElementById('ownerDashboardPage').classList.remove('active');
-            document.getElementById('registerFormContainer').innerHTML = '';
-        }
-
-        function showLogin() {
-            selectedLoginType = null;
-            document.getElementById('loginPage').classList.add('active');
-            document.getElementById('homePage').classList.remove('active');
-            document.getElementById('registerChoicePage').classList.remove('active');
-            document.getElementById('adminDashboardPage').classList.remove('active');
-            document.getElementById('candidateDashboardPage').classList.remove('active');
-            document.getElementById('ownerDashboardPage').classList.remove('active');
-            document.getElementById('loginMsg').innerHTML = '';
-        }
-
-        function setUserType(type) {
-            selectedUserType = type;
-            const container = document.getElementById('registerFormContainer');
-            
-            if (type === 'candidate') {
-                container.innerHTML = `
-                    <form id="candidateRegisterForm">
-                        <input type="text" id="regNom" placeholder="Nom complet" required>
-                        <input type="email" id="regEmail" placeholder="Email" required>
-                        <input type="password" id="regPassword" placeholder="Mot de passe (6+)" required>
-                        <input type="tel" id="regTelephone" placeholder="Téléphone (ex: 690000000)" required>
-                        <input type="number" id="regAge" placeholder="Âge" min="18" max="60" required>
-                        <input type="text" id="regVille" placeholder="Ville" required>
-                        <textarea id="regCompetences" rows="3" placeholder="Compétences (nettoyage, repassage, cuisine...)"></textarea>
-                        <input type="number" id="regExperience" placeholder="Années d'expérience" step="0.5">
-                        
-                        <div class="payment-group">
-                            <h4 style="color:#D4AF37;">💰 MODE DE PAIEMENT</h4>
-                            <div class="payment-option">
-                                <input type="radio" name="paymentMethod" id="paymentOrange" value="orange_money" required>
-                                <label for="paymentOrange">📱 Orange Money - <input type="tel" id="orangeNumber" placeholder="6XXXXXXXX" style="width:140px; display:inline-block;"></label>
-                            </div>
-                            <div class="payment-option">
-                                <input type="radio" name="paymentMethod" id="paymentMTN" value="mtn_money" required>
-                                <label for="paymentMTN">📱 MTN Mobile Money - <input type="tel" id="mtnNumber" placeholder="6XXXXXXXX" style="width:140px; display:inline-block;"></label>
-                            </div>
-                        </div>
-
-                        <div class="payment-group">
-                            <h4 style="color:#D4AF37;">📨 NOTIFICATIONS</h4>
-                            <div class="payment-option">
-                                <input type="checkbox" id="notifWhatsapp" checked> WhatsApp
-                            </div>
-                            <div class="payment-option">
-                                <input type="checkbox" id="notifSMS"> SMS
-                            </div>
-                            <div class="payment-option">
-                                <input type="checkbox" id="notifEmail" checked> Email
-                            </div>
-                        </div>
-
-                        <div style="margin: 20px 0; padding: 15px; background: rgba(52,152,219,0.1); border-radius: 10px;">
-                            <h4 style="color:#3498db;">📍 GÉOLOCALISATION</h4>
-                            <button type="button" class="btn-location" onclick="getCandidateLocation()">
-                                <i class="fas fa-location-dot"></i> 📍 Obtenir ma position
-                            </button>
-                            <div id="locationStatus"></div>
-                            <input type="hidden" id="regLatitude">
-                            <input type="hidden" id="regLongitude">
-                            <input type="text" id="regAddressDetail" placeholder="Adresse précise">
-                        </div>
-                        
-                        <button type="submit">📝 S'INSCRIRE</button>
-                    </form>
-                `;
-                document.getElementById('candidateRegisterForm')?.addEventListener('submit', registerCandidate);
-            } else {
-                container.innerHTML = `
-                    <form id="ownerRegisterForm">
-                        <input type="text" id="regNom" placeholder="Nom complet" required>
-                        <input type="email" id="regEmail" placeholder="Email" required>
-                        <input type="password" id="regPassword" placeholder="Mot de passe (6+)" required>
-                        <input type="tel" id="regTelephone" placeholder="Téléphone (ex: 690000000)" required>
-                        <input type="text" id="regVille" placeholder="Ville" required>
-                        <textarea id="regDescription" rows="3" placeholder="Description de votre besoin (type de service, fréquence...)"></textarea>
-                        
-                        <div class="service-group">
-                            <h4 style="color:#D4AF37;">🏠 SERVICES RECHERCHÉS</h4>
-                            <div class="service-option"><input type="checkbox" value="nettoyage"> Nettoyage régulier</div>
-                            <div class="service-option"><input type="checkbox" value="repassage"> Repassage</div>
-                            <div class="service-option"><input type="checkbox" value="cuisine"> Cuisine</div>
-                            <div class="service-option"><input type="checkbox" value="vitrerie"> Vitrerie</div>
-                        </div>
-
-                        <div class="payment-group">
-                            <h4 style="color:#D4AF37;">📨 NOTIFICATIONS</h4>
-                            <div class="payment-option">
-                                <input type="checkbox" id="notifWhatsapp" checked> WhatsApp
-                            </div>
-                            <div class="payment-option">
-                                <input type="checkbox" id="notifSMS"> SMS
-                            </div>
-                            <div class="payment-option">
-                                <input type="checkbox" id="notifEmail" checked> Email
-                            </div>
-                        </div>
-
-                        <div style="margin: 20px 0; padding: 15px; background: rgba(52,152,219,0.1); border-radius: 10px;">
-                            <h4 style="color:#3498db;">📍 GÉOLOCALISATION</h4>
-                            <button type="button" class="btn-location" onclick="getOwnerLocation()">
-                                <i class="fas fa-location-dot"></i> 📍 Obtenir ma position
-                            </button>
-                            <div id="locationStatusOwner"></div>
-                            <input type="hidden" id="regLatitude">
-                            <input type="hidden" id="regLongitude">
-                            <input type="text" id="regAddressDetail" placeholder="Adresse précise">
-                        </div>
-                        
-                        <button type="submit">📝 S'INSCRIRE</button>
-                    </form>
-                `;
-                document.getElementById('ownerRegisterForm')?.addEventListener('submit', registerOwner);
-            }
-        }
-
-        function setLoginType(type) {
-            selectedLoginType = type;
-            document.getElementById('loginMsg').innerHTML = '';
-        }
-
-        // ==================== INSCRIPTIONS ====================
+        
         async function getCandidateLocation() {
             const statusDiv = document.getElementById('locationStatus');
             statusDiv.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Récupération...';
+            statusDiv.className = 'info-msg';
             try {
                 const pos = await getCurrentPosition();
                 document.getElementById('regLatitude').value = pos.coords.latitude;
@@ -743,312 +448,370 @@
                 statusDiv.innerHTML = `✅ Position: ${pos.coords.latitude.toFixed(6)}, ${pos.coords.longitude.toFixed(6)}`;
                 statusDiv.className = 'success-msg';
             } catch(err) {
-                statusDiv.innerHTML = `❌ ${err.message}`;
+                statusDiv.innerHTML = `❌ ${err.message}. Veuillez activer la géolocalisation.`;
                 statusDiv.className = 'error-msg';
             }
         }
-
-        async function getOwnerLocation() {
-            const statusDiv = document.getElementById('locationStatusOwner');
-            statusDiv.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Récupération...';
-            try {
-                const pos = await getCurrentPosition();
-                document.getElementById('regLatitude').value = pos.coords.latitude;
-                document.getElementById('regLongitude').value = pos.coords.longitude;
-                statusDiv.innerHTML = `✅ Position: ${pos.coords.latitude.toFixed(6)}, ${pos.coords.longitude.toFixed(6)}`;
-                statusDiv.className = 'success-msg';
-            } catch(err) {
-                statusDiv.innerHTML = `❌ ${err.message}`;
-                statusDiv.className = 'error-msg';
-            }
-        }
-
+        
+        // ==================== INSCRIPTION (AVEC SUPABASE) ====================
         async function registerCandidate(e) {
             e.preventDefault();
             
             let paymentMethod = null, paymentNumber = null;
-            if (document.getElementById('paymentOrange')?.checked) {
+            if (document.getElementById('paymentOrange').checked) {
                 paymentMethod = 'orange_money';
-                paymentNumber = document.getElementById('orangeNumber')?.value;
-            } else if (document.getElementById('paymentMTN')?.checked) {
+                paymentNumber = document.getElementById('orangeNumber').value;
+            } else if (document.getElementById('paymentMTN').checked) {
                 paymentMethod = 'mtn_money';
-                paymentNumber = document.getElementById('mtnNumber')?.value;
+                paymentNumber = document.getElementById('mtnNumber').value;
             }
             
-            const latitude = parseFloat(document.getElementById('regLatitude')?.value);
-            const longitude = parseFloat(document.getElementById('regLongitude')?.value);
+            const latitude = parseFloat(document.getElementById('regLatitude').value);
+            const longitude = parseFloat(document.getElementById('regLongitude').value);
             
             if (!latitude || !longitude) {
-                document.getElementById('registerMsg')?.setHTML?.('<div class="error-msg">❌ Activez votre géolocalisation</div>');
                 alert('❌ Veuillez activer votre géolocalisation');
                 return;
             }
             
-            const candidate = {
+            const candidateData = {
                 id: Date.now(),
-                nom: document.getElementById('regNom')?.value,
-                email: document.getElementById('regEmail')?.value,
-                password: document.getElementById('regPassword')?.value,
-                telephone: document.getElementById('regTelephone')?.value,
-                age: parseInt(document.getElementById('regAge')?.value),
-                ville: document.getElementById('regVille')?.value,
-                competences: document.getElementById('regCompetences')?.value,
-                experience: parseFloat(document.getElementById('regExperience')?.value) || 0,
-                latitude, longitude,
-                addressDetail: document.getElementById('regAddressDetail')?.value,
-                paymentMethod, paymentNumber,
-                whatsapp: document.getElementById('notifWhatsapp')?.checked ? 'oui' : 'non',
-                sms: document.getElementById('notifSMS')?.checked ? 'oui' : 'non',
-                emailNotif: document.getElementById('notifEmail')?.checked ? 'oui' : 'non',
+                nom: document.getElementById('regNom').value,
+                email: document.getElementById('regEmail').value,
+                password: document.getElementById('regPassword').value,
+                telephone: document.getElementById('regTelephone').value,
+                age: parseInt(document.getElementById('regAge').value),
+                ville: document.getElementById('regVille').value,
+                competences: document.getElementById('regCompetences').value,
+                experience: parseFloat(document.getElementById('regExperience').value) || 0,
+                latitude: latitude,
+                longitude: longitude,
+                address_detail: document.getElementById('regAddressDetail').value,
+                payment_method: paymentMethod,
+                payment_number: paymentNumber,
+                whatsapp: 'oui',
+                sms: 'non',
+                email_notif: 'oui',
                 status: 'pending',
-                type: 'candidate',
-                dateInscription: new Date().toISOString()
+                date_inscription: new Date().toISOString()
             };
             
+            // Tentative d'enregistrement dans Supabase
+            if (supabase) {
+                try {
+                    const { error } = await supabase.from('candidates').insert([candidateData]);
+                    if (error) throw error;
+                    alert('✅ Inscription réussie ! En attente de validation par l\'administrateur.\n\n📱 Connectez-vous avec l\'admin sur un autre appareil pour voir cette inscription.');
+                    document.getElementById('candidateRegisterForm').reset();
+                    showPage('candidateLogin');
+                    return;
+                } catch(err) {
+                    console.error(err);
+                    // Fallback localStorage
+                    saveToLocalStorage(candidateData);
+                }
+            } else {
+                saveToLocalStorage(candidateData);
+            }
+        }
+        
+        function saveToLocalStorage(candidateData) {
             let candidates = JSON.parse(localStorage.getItem('candidates') || '[]');
-            if (candidates.some(c => c.email === candidate.email)) {
+            if (candidates.some(c => c.email === candidateData.email)) {
                 alert('❌ Cet email est déjà utilisé');
                 return;
             }
-            
-            candidates.push(candidate);
+            candidates.push(candidateData);
             localStorage.setItem('candidates', JSON.stringify(candidates));
-            alert('✅ Inscription réussie ! En attente de validation par l\'administrateur.');
-            showLogin();
+            alert('✅ Inscription réussie (mode local) ! En attente de validation.\n\n⚠️ Pour une synchronisation multi-appareil, configurez Supabase.');
+            document.getElementById('candidateRegisterForm').reset();
+            showPage('candidateLogin');
         }
-
-        async function registerOwner(e) {
-            e.preventDefault();
-            
-            const latitude = parseFloat(document.getElementById('regLatitude')?.value);
-            const longitude = parseFloat(document.getElementById('regLongitude')?.value);
-            
-            if (!latitude || !longitude) {
-                alert('❌ Veuillez activer votre géolocalisation');
-                return;
-            }
-            
-            const services = [];
-            document.querySelectorAll('.service-option input:checked').forEach(cb => services.push(cb.value));
-            
-            const owner = {
-                id: Date.now(),
-                nom: document.getElementById('regNom')?.value,
-                email: document.getElementById('regEmail')?.value,
-                password: document.getElementById('regPassword')?.value,
-                telephone: document.getElementById('regTelephone')?.value,
-                ville: document.getElementById('regVille')?.value,
-                description: document.getElementById('regDescription')?.value,
-                services: services,
-                latitude, longitude,
-                addressDetail: document.getElementById('regAddressDetail')?.value,
-                whatsapp: document.getElementById('notifWhatsapp')?.checked ? 'oui' : 'non',
-                sms: document.getElementById('notifSMS')?.checked ? 'oui' : 'non',
-                emailNotif: document.getElementById('notifEmail')?.checked ? 'oui' : 'non',
-                status: 'pending',
-                type: 'owner',
-                dateInscription: new Date().toISOString()
-            };
-            
-            let owners = JSON.parse(localStorage.getItem('owners') || '[]');
-            if (owners.some(o => o.email === owner.email)) {
-                alert('❌ Cet email est déjà utilisé');
-                return;
-            }
-            
-            owners.push(owner);
-            localStorage.setItem('owners', JSON.stringify(owners));
-            alert('✅ Inscription réussie ! En attente de validation par l\'administrateur.');
-            showLogin();
-        }
-
+        
         // ==================== CONNEXION ====================
-        async function login(email, password, type) {
+        async function loginAdmin(email, password) {
             if (email === 'admin@menagepro.com' && password === 'admin123') {
                 currentUser = { nom: 'Admin', type: 'admin' };
                 currentUserType = 'admin';
                 showPage('adminDashboard');
-                loadAdminDashboard();
+                await loadAdminDashboard();
                 return true;
             }
+            return false;
+        }
+        
+        async function loginCandidate(email, password) {
+            // Chercher dans Supabase d'abord
+            if (supabase) {
+                try {
+                    const { data, error } = await supabase
+                        .from('candidates')
+                        .select('*')
+                        .eq('email', email)
+                        .eq('password', password);
+                    
+                    if (error) throw error;
+                    if (data && data.length > 0) {
+                        const candidate = data[0];
+                        if (candidate.status === 'pending') {
+                            alert('⏳ Votre compte est en attente de validation');
+                            return false;
+                        }
+                        if (candidate.status === 'rejected') {
+                            alert('❌ Votre candidature a été refusée');
+                            return false;
+                        }
+                        currentUser = candidate;
+                        currentUserType = 'candidate';
+                        showPage('candidateDashboard');
+                        loadCandidateDashboard();
+                        return true;
+                    }
+                } catch(err) {
+                    console.error(err);
+                }
+            }
             
-            if (type === 'candidate') {
-                let candidates = JSON.parse(localStorage.getItem('candidates') || '[]');
-                const candidate = candidates.find(c => c.email === email && c.password === password);
-                if (candidate) {
-                    if (candidate.status === 'pending') {
-                        alert('⏳ Votre compte est en attente de validation');
-                        return false;
-                    }
-                    if (candidate.status === 'rejected') {
-                        alert('❌ Votre candidature a été refusée');
-                        return false;
-                    }
-                    currentUser = candidate;
-                    currentUserType = 'candidate';
-                    showPage('candidateDashboard');
-                    loadCandidateDashboard();
-                    return true;
+            // Chercher dans localStorage
+            let candidates = JSON.parse(localStorage.getItem('candidates') || '[]');
+            const candidate = candidates.find(c => c.email === email && c.password === password);
+            if (candidate) {
+                if (candidate.status === 'pending') {
+                    alert('⏳ Votre compte est en attente de validation');
+                    return false;
                 }
-            } else if (type === 'owner') {
-                let owners = JSON.parse(localStorage.getItem('owners') || '[]');
-                const owner = owners.find(o => o.email === email && o.password === password);
-                if (owner) {
-                    if (owner.status === 'pending') {
-                        alert('⏳ Votre compte est en attente de validation');
-                        return false;
-                    }
-                    if (owner.status === 'rejected') {
-                        alert('❌ Votre inscription a été refusée');
-                        return false;
-                    }
-                    currentUser = owner;
-                    currentUserType = 'owner';
-                    showPage('ownerDashboard');
-                    loadOwnerDashboard();
-                    return true;
+                if (candidate.status === 'rejected') {
+                    alert('❌ Votre candidature a été refusée');
+                    return false;
                 }
+                currentUser = candidate;
+                currentUserType = 'candidate';
+                showPage('candidateDashboard');
+                loadCandidateDashboard();
+                return true;
             }
             
             alert('❌ Email ou mot de passe incorrect');
             return false;
         }
-
-        // ==================== DASHBOARD ADMIN ====================
-        function loadAdminDashboard() {
-            const candidates = JSON.parse(localStorage.getItem('candidates') || '[]');
-            const owners = JSON.parse(localStorage.getItem('owners') || '[]');
-            const matches = JSON.parse(localStorage.getItem('matches') || '[]');
+        
+        // ==================== DASHBOARD ADMIN (AVEC SYNC SUPABASE) ====================
+        async function loadAdminDashboard() {
+            let candidates = [];
+            let owners = [];
+            
+            if (supabase) {
+                try {
+                    // Récupérer les candidates depuis Supabase
+                    const { data: candidatesData, error: candidatesError } = await supabase
+                        .from('candidates')
+                        .select('*')
+                        .order('date_inscription', { ascending: false });
+                    
+                    if (!candidatesError && candidatesData) {
+                        candidates = candidatesData;
+                        console.log(`✅ ${candidates.length} candidates chargées depuis Supabase`);
+                    }
+                    
+                    // Récupérer les propriétaires
+                    const { data: ownersData, error: ownersError } = await supabase
+                        .from('owners')
+                        .select('*')
+                        .order('date_inscription', { ascending: false });
+                    
+                    if (!ownersError && ownersData) {
+                        owners = ownersData;
+                        console.log(`✅ ${owners.length} propriétaires chargés depuis Supabase`);
+                    }
+                    
+                    // Mettre à jour le badge temps réel
+                    document.getElementById('realtimeBadge').innerHTML = '🟢 SYNCHRONISÉ EN LIGNE';
+                    document.getElementById('realtimeBadge').style.background = '#27ae60';
+                    
+                } catch(err) {
+                    console.error('Erreur Supabase:', err);
+                    // Fallback localStorage
+                    candidates = JSON.parse(localStorage.getItem('candidates') || '[]');
+                    owners = JSON.parse(localStorage.getItem('owners') || '[]');
+                    document.getElementById('realtimeBadge').innerHTML = '⚠️ MODE LOCAL';
+                    document.getElementById('realtimeBadge').style.background = '#f39c12';
+                }
+            } else {
+                candidates = JSON.parse(localStorage.getItem('candidates') || '[]');
+                owners = JSON.parse(localStorage.getItem('owners') || '[]');
+                document.getElementById('realtimeBadge').innerHTML = '⚠️ MODE LOCAL';
+                document.getElementById('realtimeBadge').style.background = '#f39c12';
+            }
+            
+            const pendingCandidates = candidates.filter(c => c.status === 'pending').length;
+            const acceptedCandidates = candidates.filter(c => c.status === 'accepted').length;
+            const pendingOwners = owners.filter(o => o.status === 'pending').length;
+            const acceptedOwners = owners.filter(o => o.status === 'accepted').length;
             
             document.getElementById('adminStats').innerHTML = `
-                <div class="stat-card"><div class="stat-number">${candidates.filter(c => c.status === 'pending').length}</div><div>Candidates en attente</div></div>
-                <div class="stat-card"><div class="stat-number">${candidates.filter(c => c.status === 'accepted').length}</div><div>Candidates validées</div></div>
-                <div class="stat-card"><div class="stat-number">${owners.filter(o => o.status === 'pending').length}</div><div>Propriétaires en attente</div></div>
-                <div class="stat-card"><div class="stat-number">${owners.filter(o => o.status === 'accepted').length}</div><div>Propriétaires validés</div></div>
+                <div class="stat-card"><div class="stat-number">${pendingCandidates}</div><div>Candidates en attente</div></div>
+                <div class="stat-card"><div class="stat-number">${acceptedCandidates}</div><div>Candidates validées</div></div>
+                <div class="stat-card"><div class="stat-number">${pendingOwners}</div><div>Propriétaires en attente</div></div>
+                <div class="stat-card"><div class="stat-number">${acceptedOwners}</div><div>Propriétaires validés</div></div>
             `;
             
             const candidatesTable = document.getElementById('adminCandidatesTable');
             candidatesTable.innerHTML = candidates.map(c => `
                 <tr>
-                    <td>${c.nom}</td><td>${c.email}</td><td>${c.telephone}</td><td>${c.ville}</td>
-                    <td><span class="badge badge-${c.status}">${c.status === 'pending' ? 'En attente' : c.status === 'accepted' ? 'Validée' : 'Refusée'}</span></td>
+                    <td><strong>${c.nom || '-'}</strong></td>
+                    <td>${c.email || '-'}</td>
+                    <td>${c.telephone || '-'}</td>
+                    <td>${c.ville || '-'}</td>
+                    <td><span class="badge badge-${c.status}">${c.status === 'pending' ? '⏳ En attente' : c.status === 'accepted' ? '✅ Validée' : '❌ Refusée'}</span></td>
                     <td>
                         <button class="btn-sm btn-info" onclick="viewCandidate(${c.id})">📋</button>
                         ${c.status === 'pending' ? 
                             `<button class="btn-sm btn-success" onclick="validateCandidate(${c.id})">✅ Valider</button>
-                             <button class="btn-sm btn-danger" onclick="rejectCandidate(${c.id})">❌ Refuser</button>` : ''}
+                             <button class="btn-sm btn-danger" onclick="rejectCandidate(${c.id})">❌ Refuser</button>` : 
+                            c.status === 'accepted' ? 
+                                `<button class="btn-sm btn-danger" onclick="rejectCandidate(${c.id})">❌</button>` : 
+                                `<button class="btn-sm btn-success" onclick="validateCandidate(${c.id})">✅</button>`
+                        }
                     </td>
                 </tr>
             `).join('');
+            
+            if (candidates.length === 0) {
+                candidatesTable.innerHTML = '<tr><td colspan="6" style="text-align:center;">📭 Aucune candidate inscrite pour le moment</td></tr>';
+            }
             
             const ownersTable = document.getElementById('adminOwnersTable');
             ownersTable.innerHTML = owners.map(o => `
                 <tr>
-                    <td>${o.nom}</td><td>${o.email}</td><td>${o.telephone}</td><td>${o.ville}</td>
-                    <td><span class="badge badge-${o.status}">${o.status === 'pending' ? 'En attente' : o.status === 'accepted' ? 'Validé' : 'Refusé'}</span></td>
+                    <td><strong>${o.nom || '-'}</strong></td>
+                    <td>${o.email || '-'}</td>
+                    <td>${o.telephone || '-'}</td>
+                    <td>${o.ville || '-'}</td>
+                    <td><span class="badge badge-${o.status}">${o.status === 'pending' ? '⏳ En attente' : o.status === 'accepted' ? '✅ Validé' : '❌ Refusé'}</span></td>
                     <td>
                         <button class="btn-sm btn-info" onclick="viewOwner(${o.id})">📋</button>
                         ${o.status === 'pending' ? 
                             `<button class="btn-sm btn-success" onclick="validateOwner(${o.id})">✅ Valider</button>
-                             <button class="btn-sm btn-danger" onclick="rejectOwner(${o.id})">❌ Refuser</button>` : ''}
+                             <button class="btn-sm btn-danger" onclick="rejectOwner(${o.id})">❌ Refuser</button>` : 
+                            o.status === 'accepted' ? 
+                                `<button class="btn-sm btn-danger" onclick="rejectOwner(${o.id})">❌</button>` : 
+                                `<button class="btn-sm btn-success" onclick="validateOwner(${o.id})">✅</button>`
+                        }
                     </td>
                 </tr>
             `).join('');
-            
-            const matchesTable = document.getElementById('matchesTable');
-            matchesTable.innerHTML = matches.map(m => {
-                const owner = owners.find(o => o.id === m.ownerId);
-                const candidate = candidates.find(c => c.id === m.candidateId);
-                return `
-                    <tr>
-                        <td>${m.id}</td>
-                        <td>${owner?.nom || '-'}</td>
-                        <td>${candidate?.nom || '-'}</td>
-                        <td>${m.distance?.toFixed(1) || '-'} km</td>
-                        <td><span class="badge badge-${m.status}">${m.status === 'pending' ? 'En attente' : m.status === 'accepted' ? 'Accepté' : 'Refusé'}</span></td>
-                        <td>
-                            ${m.status === 'pending' ? 
-                                `<button class="btn-sm btn-success" onclick="acceptMatch(${m.id})">✅ Accepter</button>
-                                 <button class="btn-sm btn-danger" onclick="rejectMatch(${m.id})">❌ Refuser</button>` : ''}
-                        </td>
-                    </tr>
-                `;
-            }).join('');
         }
-
+        
+        // ==================== VALIDATION AVEC NOTIFICATION ====================
         async function validateCandidate(id) {
-            let candidates = JSON.parse(localStorage.getItem('candidates') || '[]');
-            const index = candidates.findIndex(c => c.id === id);
-            if (index !== -1) {
-                candidates[index].status = 'accepted';
-                localStorage.setItem('candidates', JSON.stringify(candidates));
-                
-                const candidate = candidates[index];
-                await sendNotifications(candidate, 
-                    `🎉 Félicitations ${candidate.nom} ! Votre profil a été validé. Vous allez recevoir des demandes de propriétaires proches de chez vous.`,
-                    'candidate');
-                
-                alert('✅ Candidate validée et notifiée !');
-                loadAdminDashboard();
+            if (supabase) {
+                try {
+                    const { error } = await supabase
+                        .from('candidates')
+                        .update({ status: 'accepted' })
+                        .eq('id', id);
+                    
+                    if (error) throw error;
+                    alert('✅ Candidate validée avec succès !\n\n📱 La candidate peut maintenant se connecter depuis n\'importe quel appareil.');
+                    await loadAdminDashboard();
+                } catch(err) {
+                    console.error(err);
+                    alert('❌ Erreur de synchronisation');
+                }
+            } else {
+                let candidates = JSON.parse(localStorage.getItem('candidates') || '[]');
+                const index = candidates.findIndex(c => c.id === id);
+                if (index !== -1) {
+                    candidates[index].status = 'accepted';
+                    localStorage.setItem('candidates', JSON.stringify(candidates));
+                    alert('✅ Candidate validée (mode local)');
+                    loadAdminDashboard();
+                }
             }
         }
-
-        async function validateOwner(id) {
+        
+        async function rejectCandidate(id) {
+            if (supabase) {
+                try {
+                    const { error } = await supabase
+                        .from('candidates')
+                        .update({ status: 'rejected' })
+                        .eq('id', id);
+                    
+                    if (error) throw error;
+                    alert('❌ Candidate refusée');
+                    await loadAdminDashboard();
+                } catch(err) {
+                    console.error(err);
+                }
+            } else {
+                let candidates = JSON.parse(localStorage.getItem('candidates') || '[]');
+                const index = candidates.findIndex(c => c.id === id);
+                if (index !== -1) {
+                    candidates[index].status = 'rejected';
+                    localStorage.setItem('candidates', JSON.stringify(candidates));
+                    alert('❌ Candidate refusée');
+                    loadAdminDashboard();
+                }
+            }
+        }
+        
+        function viewCandidate(id) {
+            const candidates = JSON.parse(localStorage.getItem('candidates') || '[]');
+            const c = candidates.find(c => c.id === id);
+            if (c) {
+                alert(`📋 DÉTAILS CANDIDATE\n\n` +
+                    `Nom: ${c.nom}\n` +
+                    `Email: ${c.email}\n` +
+                    `Téléphone: ${c.telephone}\n` +
+                    `Ville: ${c.ville}\n` +
+                    `Position: ${c.latitude}, ${c.longitude}\n` +
+                    `Adresse: ${c.address_detail || '-'}\n` +
+                    `Compétences: ${c.competences || '-'}\n` +
+                    `Statut: ${c.status === 'pending' ? 'En attente' : c.status === 'accepted' ? 'Validée' : 'Refusée'}`);
+            }
+        }
+        
+        function viewOwner(id) {
+            const owners = JSON.parse(localStorage.getItem('owners') || '[]');
+            const o = owners.find(o => o.id === id);
+            if (o) {
+                alert(`📋 DÉTAILS PROPRIÉTAIRE\n\n` +
+                    `Nom: ${o.nom}\n` +
+                    `Email: ${o.email}\n` +
+                    `Téléphone: ${o.telephone}\n` +
+                    `Ville: ${o.ville}\n` +
+                    `Besoin: ${o.description || '-'}`);
+            }
+        }
+        
+        function validateOwner(id) {
             let owners = JSON.parse(localStorage.getItem('owners') || '[]');
             const index = owners.findIndex(o => o.id === id);
             if (index !== -1) {
                 owners[index].status = 'accepted';
                 localStorage.setItem('owners', JSON.stringify(owners));
-                
-                const owner = owners[index];
-                await sendNotifications(owner,
-                    `🏠 Bienvenue ${owner.nom} ! Votre compte a été validé. Vous pouvez maintenant trouver des femmes de ménage près de chez vous.`,
-                    'owner');
-                
-                alert('✅ Propriétaire validé et notifié !');
+                alert('✅ Propriétaire validé');
                 loadAdminDashboard();
             }
         }
-
-        async function acceptMatch(matchId) {
-            let matches = JSON.parse(localStorage.getItem('matches') || '[]');
-            const candidates = JSON.parse(localStorage.getItem('candidates') || '[]');
-            const owners = JSON.parse(localStorage.getItem('owners') || '[]');
-            
-            const matchIndex = matches.findIndex(m => m.id === matchId);
-            if (matchIndex !== -1) {
-                matches[matchIndex].status = 'accepted';
-                localStorage.setItem('matches', JSON.stringify(matches));
-                
-                const candidate = candidates.find(c => c.id === matches[matchIndex].candidateId);
-                const owner = owners.find(o => o.id === matches[matchIndex].ownerId);
-                
-                if (candidate && owner) {
-                    await sendNotifications(candidate,
-                        `✅ Félicitations ! Vous avez été sélectionnée par ${owner.nom} pour un poste de ménage à ${owner.addressDetail || owner.ville}. Contactez-le au ${owner.telephone}`,
-                        'candidate');
-                    
-                    await sendNotifications(owner,
-                        `🎉 Nous avons trouvé une ménagère pour vous ! ${candidate.nom} est disponible près de chez vous. Contactez-la au ${candidate.telephone}`,
-                        'owner');
-                    
-                    alert('✅ Match accepté ! Les deux parties ont été notifiées.');
-                }
-                
+        
+        function rejectOwner(id) {
+            let owners = JSON.parse(localStorage.getItem('owners') || '[]');
+            const index = owners.findIndex(o => o.id === id);
+            if (index !== -1) {
+                owners[index].status = 'rejected';
+                localStorage.setItem('owners', JSON.stringify(owners));
+                alert('❌ Propriétaire refusé');
                 loadAdminDashboard();
             }
         }
-
+        
         // ==================== DASHBOARD CANDIDATE ====================
         function loadCandidateDashboard() {
             if (!currentUser) return;
-            
             document.getElementById('candStatus').innerHTML = currentUser.status === 'accepted' ? '✅ Validée' : '⏳ En attente';
-            
-            const matches = JSON.parse(localStorage.getItem('matches') || '[]');
-            const myMatches = matches.filter(m => m.candidateId === currentUser.id && m.status === 'accepted');
-            document.getElementById('candMatches').innerHTML = myMatches.length;
-            
+            document.getElementById('candMatches').innerHTML = '0';
             document.getElementById('candidateInfo').innerHTML = `
                 <div><strong>👤 Nom:</strong> ${currentUser.nom}</div>
                 <div><strong>📧 Email:</strong> ${currentUser.email}</div>
@@ -1056,112 +819,12 @@
                 <div><strong>📍 Ville:</strong> ${currentUser.ville}</div>
                 <div><strong>⭐ Expérience:</strong> ${currentUser.experience || 0} ans</div>
                 <div><strong>🔧 Compétences:</strong> ${currentUser.competences || '-'}</div>
-            `;
-            
-            const requests = matches.filter(m => m.candidateId === currentUser.id && m.status === 'pending');
-            const requestsDiv = document.getElementById('candidateRequests');
-            if (requests.length === 0) {
-                requestsDiv.innerHTML = '<div class="info-msg">📭 Aucune demande pour le moment</div>';
-            } else {
-                const owners = JSON.parse(localStorage.getItem('owners') || '[]');
-                requestsDiv.innerHTML = requests.map(m => {
-                    const owner = owners.find(o => o.id === m.ownerId);
-                    return `
-                        <div class="match-card">
-                            <strong>🏠 ${owner?.nom}</strong><br>
-                            📍 ${owner?.addressDetail || owner?.ville}<br>
-                            📏 Distance: ${m.distance?.toFixed(1)} km<br>
-                            📝 Besoin: ${owner?.description?.substring(0, 100)}...<br>
-                            <button class="btn-sm btn-success" onclick="acceptRequest(${m.id})">✅ Accepter</button>
-                            <button class="btn-sm btn-danger" onclick="rejectRequest(${m.id})">❌ Refuser</button>
-                        </div>
-                    `;
-                }).join('');
-            }
-        }
-
-        // ==================== DASHBOARD OWNER ====================
-        function loadOwnerDashboard() {
-            if (!currentUser) return;
-            
-            document.getElementById('ownerStatus').innerHTML = currentUser.status === 'accepted' ? '✅ Validé' : '⏳ En attente';
-            
-            const matches = JSON.parse(localStorage.getItem('matches') || '[]');
-            const myMatches = matches.filter(m => m.ownerId === currentUser.id && m.status === 'accepted');
-            document.getElementById('ownerMatches').innerHTML = myMatches.length;
-            
-            document.getElementById('ownerInfo').innerHTML = `
-                <div><strong>👤 Nom:</strong> ${currentUser.nom}</div>
-                <div><strong>📧 Email:</strong> ${currentUser.email}</div>
-                <div><strong>📱 Téléphone:</strong> ${currentUser.telephone}</div>
-                <div><strong>📍 Ville:</strong> ${currentUser.ville}</div>
-                <div><strong>📝 Besoin:</strong> ${currentUser.description || '-'}</div>
+                <div><strong>📍 Position:</strong> ${currentUser.latitude?.toFixed(6) || '-'}, ${currentUser.longitude?.toFixed(6) || '-'}</div>
             `;
         }
-
-        async function findNearbyCandidates() {
-            if (!currentUser || !currentUser.latitude) {
-                alert('❌ Activez votre géolocalisation');
-                return;
-            }
-            
-            const candidates = JSON.parse(localStorage.getItem('candidates') || '[]');
-            const acceptedCandidates = candidates.filter(c => c.status === 'accepted' && c.latitude);
-            
-            const nearby = acceptedCandidates.map(c => ({
-                ...c,
-                distance: calculateDistance(currentUser.latitude, currentUser.longitude, c.latitude, c.longitude)
-            })).filter(c => c.distance <= 20).sort((a, b) => a.distance - b.distance);
-            
-            const container = document.getElementById('nearbyCandidates');
-            if (nearby.length === 0) {
-                container.innerHTML = '<div class="info-msg">📭 Aucune candidate disponible dans un rayon de 20km</div>';
-                return;
-            }
-            
-            container.innerHTML = nearby.map(c => `
-                <div class="match-card">
-                    <strong>👩‍🍳 ${c.nom}</strong><br>
-                    📍 ${c.addressDetail || c.ville}<br>
-                    📏 Distance: ${c.distance.toFixed(1)} km<br>
-                    ⭐ ${c.experience} ans d'expérience<br>
-                    🔧 ${c.competences?.substring(0, 80) || '-'}<br>
-                    <button class="btn-sm btn-success" onclick="sendRequest(${c.id})">📨 Envoyer une demande</button>
-                </div>
-            `).join('');
-        }
-
-        async function sendRequest(candidateId) {
-            const matches = JSON.parse(localStorage.getItem('matches') || '[]');
-            const candidates = JSON.parse(localStorage.getItem('candidates') || '[]');
-            const candidate = candidates.find(c => c.id === candidateId);
-            
-            const distance = calculateDistance(currentUser.latitude, currentUser.longitude, candidate.latitude, candidate.longitude);
-            
-            const newMatch = {
-                id: Date.now(),
-                ownerId: currentUser.id,
-                candidateId: candidateId,
-                ownerName: currentUser.nom,
-                candidateName: candidate.nom,
-                distance: distance,
-                status: 'pending',
-                createdAt: new Date().toISOString()
-            };
-            
-            matches.push(newMatch);
-            localStorage.setItem('matches', JSON.stringify(matches));
-            
-            await sendNotifications(candidate,
-                `📩 Vous avez reçu une demande de ${currentUser.nom} à ${currentUser.addressDetail || currentUser.ville} (${distance.toFixed(1)} km de chez vous). Connectez-vous à votre espace pour répondre.`,
-                'candidate');
-            
-            alert(`✅ Demande envoyée à ${candidate.nom} ! Elle sera notifiée.`);
-            findNearbyCandidates();
-        }
-
-        // ==================== NAVIGATION & UTILITAIRES ====================
-        window.showPage = function(pageName) {
+        
+        // ==================== NAVIGATION ====================
+        function showPage(pageName) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             const target = document.getElementById(pageName + 'Page');
             if (target) target.classList.add('active');
@@ -1173,117 +836,64 @@
                 navButtons.style.display = 'none';
                 userInfo.style.display = 'flex';
                 document.getElementById('userNameDisplay').innerHTML = `👑 ${currentUser?.nom || 'Admin'}`;
-            } else if (pageName === 'candidateDashboard' || pageName === 'ownerDashboard') {
+            } else if (pageName === 'candidateDashboard') {
                 navButtons.style.display = 'none';
                 userInfo.style.display = 'flex';
-                document.getElementById('userNameDisplay').innerHTML = `${pageName === 'candidateDashboard' ? '👩‍🍳' : '🏠'} ${currentUser?.nom || ''}`;
+                document.getElementById('userNameDisplay').innerHTML = `👩‍🍳 ${currentUser?.nom || ''}`;
             } else {
                 navButtons.style.display = 'flex';
                 userInfo.style.display = 'none';
             }
-        };
+        }
         
-        window.logout = function() {
+        function logout() {
             currentUser = null;
             currentUserType = null;
             showPage('home');
-        };
+        }
         
-        window.viewCandidate = function(id) {
-            const candidates = JSON.parse(localStorage.getItem('candidates') || '[]');
-            const c = candidates.find(c => c.id === id);
-            if (c) alert(`📋 CANDIDATE\nNom: ${c.nom}\nEmail: ${c.email}\nTél: ${c.telephone}\nVille: ${c.ville}\nCompétences: ${c.competences}`);
-        };
-        
-        window.viewOwner = function(id) {
-            const owners = JSON.parse(localStorage.getItem('owners') || '[]');
-            const o = owners.find(o => o.id === id);
-            if (o) alert(`📋 PROPRIÉTAIRE\nNom: ${o.nom}\nEmail: ${o.email}\nTél: ${o.telephone}\nVille: ${o.ville}\nBesoin: ${o.description}`);
-        };
-        
-        window.rejectCandidate = function(id) {
-            let candidates = JSON.parse(localStorage.getItem('candidates') || '[]');
-            const index = candidates.findIndex(c => c.id === id);
-            if (index !== -1) {
-                candidates[index].status = 'rejected';
-                localStorage.setItem('candidates', JSON.stringify(candidates));
-                alert('❌ Candidate refusée');
-                loadAdminDashboard();
-            }
-        };
-        
-        window.rejectOwner = function(id) {
-            let owners = JSON.parse(localStorage.getItem('owners') || '[]');
-            const index = owners.findIndex(o => o.id === id);
-            if (index !== -1) {
-                owners[index].status = 'rejected';
-                localStorage.setItem('owners', JSON.stringify(owners));
-                alert('❌ Propriétaire refusé');
-                loadAdminDashboard();
-            }
-        };
-        
-        window.rejectMatch = function(id) {
-            let matches = JSON.parse(localStorage.getItem('matches') || '[]');
-            const index = matches.findIndex(m => m.id === id);
-            if (index !== -1) {
-                matches[index].status = 'rejected';
-                localStorage.setItem('matches', JSON.stringify(matches));
-                alert('❌ Demande refusée');
-                loadAdminDashboard();
-            }
-        };
-        
-        window.acceptRequest = async function(matchId) {
-            let matches = JSON.parse(localStorage.getItem('matches') || '[]');
-            const candidates = JSON.parse(localStorage.getItem('candidates') || '[]');
-            const owners = JSON.parse(localStorage.getItem('owners') || '[]');
-            
-            const matchIndex = matches.findIndex(m => m.id === matchId);
-            if (matchIndex !== -1) {
-                matches[matchIndex].status = 'accepted';
-                localStorage.setItem('matches', JSON.stringify(matches));
-                
-                const candidate = candidates.find(c => c.id === matches[matchIndex].candidateId);
-                const owner = owners.find(o => o.id === matches[matchIndex].ownerId);
-                
-                if (candidate && owner) {
-                    await sendNotifications(owner,
-                        `✅ ${candidate.nom} a accepté votre demande ! Contactez-la au ${candidate.telephone}`,
-                        'owner');
-                    
-                    await sendNotifications(candidate,
-                        `🎉 Félicitations ! ${owner.nom} a confirmé votre sélection pour le poste à ${owner.addressDetail || owner.ville}. Contactez-le au ${owner.telephone}`,
-                        'candidate');
-                    
-                    alert('✅ Demande acceptée ! Les deux parties ont été notifiées.');
-                }
-                
-                loadCandidateDashboard();
-            }
-        };
-        
-        window.rejectRequest = function(matchId) {
-            let matches = JSON.parse(localStorage.getItem('matches') || '[]');
-            const index = matches.findIndex(m => m.id === matchId);
-            if (index !== -1) {
-                matches[index].status = 'rejected';
-                localStorage.setItem('matches', JSON.stringify(matches));
-                alert('❌ Demande refusée');
-                loadCandidateDashboard();
-            }
-        };
-
-        // Écouteurs d'événements
-        document.getElementById('loginForm')?.addEventListener('submit', (e) => {
+        // ==================== EVENT LISTENERS ====================
+        document.getElementById('adminLoginForm')?.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
-            login(email, password, selectedLoginType);
+            const email = document.getElementById('adminEmail').value;
+            const password = document.getElementById('adminPassword').value;
+            if (await loginAdmin(email, password)) {
+                document.getElementById('adminLoginMsg').innerHTML = '<div class="success-msg">✅ Connexion réussie</div>';
+            } else {
+                document.getElementById('adminLoginMsg').innerHTML = '<div class="error-msg">❌ Identifiants incorrects</div>';
+            }
         });
-
+        
+        document.getElementById('candidateLoginForm')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('candEmail').value;
+            const password = document.getElementById('candPassword').value;
+            if (await loginCandidate(email, password)) {
+                document.getElementById('candidateLoginMsg').innerHTML = '<div class="success-msg">✅ Connexion réussie</div>';
+            } else {
+                document.getElementById('candidateLoginMsg').innerHTML = '<div class="error-msg">❌ Email ou mot de passe incorrect</div>';
+            }
+        });
+        
+        document.getElementById('candidateRegisterForm')?.addEventListener('submit', registerCandidate);
+        
         // Initialisation
-        initLocalData();
+        const supabaseInitialized = initSupabase();
+        if (!supabaseInitialized) {
+            useLocalMode();
+        }
+        
+        // Exposer les fonctions globales
+        window.showPage = showPage;
+        window.logout = logout;
+        window.loadAdminDashboard = loadAdminDashboard;
+        window.validateCandidate = validateCandidate;
+        window.rejectCandidate = rejectCandidate;
+        window.validateOwner = validateOwner;
+        window.rejectOwner = rejectOwner;
+        window.viewCandidate = viewCandidate;
+        window.viewOwner = viewOwner;
+        window.getCandidateLocation = getCandidateLocation;
     </script>
 </body>
 </html>
