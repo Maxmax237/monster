@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MenagePro - Services de ménage professionnel</title>
+    <title>MenagePro - Ménage & Entretien Cameroun</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * {
             margin: 0;
@@ -98,129 +100,32 @@
             color: #0a0a0a;
         }
 
-        .user-info {
-            background: rgba(212, 175, 55, 0.2);
-            padding: 8px 20px;
-            border-radius: 30px;
-            color: #D4AF37;
-            font-size: 14px;
-            border: 1px solid rgba(212, 175, 55, 0.3);
-        }
-
-        .logout-btn {
-            background: rgba(212, 175, 55, 0.2);
-            border: 1px solid rgba(212, 175, 55, 0.5);
-            color: #D4AF37;
-            padding: 8px 16px;
-            border-radius: 30px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .logout-btn:hover {
-            background: #D4AF37;
-            color: #0a0a0a;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 30px;
-        }
-
-        .hero {
-            text-align: center;
-            padding: 60px 20px;
-            background: linear-gradient(135deg, rgba(10,10,10,0.9) 0%, rgba(20,20,20,0.95) 100%);
-            border-radius: 30px;
-            margin-bottom: 40px;
-            border: 1px solid rgba(212, 175, 55, 0.3);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(circle at 20% 40%, rgba(212,175,55,0.15), transparent 40%);
-            animation: pulseGlow 8s ease-in-out infinite alternate;
-        }
-
-        @keyframes pulseGlow {
-            from { opacity: 0.3; transform: scale(1); }
-            to { opacity: 0.8; transform: scale(1.05); }
-        }
-
-        .hero h1 {
-            font-size: 56px;
-            margin-bottom: 20px;
-            background: linear-gradient(135deg, #D4AF37 0%, #FFD700 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .hero p {
-            font-size: 18px;
-            margin-bottom: 30px;
-            color: rgba(255,255,255,0.7);
-        }
-
-        .hero-buttons {
+        .user-type-selector {
             display: flex;
-            gap: 20px;
-            justify-content: center;
-            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
         }
 
-        .hero-btn {
-            padding: 15px 35px;
-            background: transparent;
-            border: 2px solid #D4AF37;
-            color: #D4AF37;
-            border-radius: 50px;
-            font-weight: bold;
+        .user-type-btn {
+            flex: 1;
+            padding: 12px;
+            background: rgba(30,30,30,0.8);
+            border: 2px solid rgba(212,175,55,0.3);
+            border-radius: 10px;
             cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .hero-btn:hover {
-            background: #D4AF37;
-            color: #0a0a0a;
-            transform: translateY(-5px);
-        }
-
-        .hero-btn-primary {
-            background: #D4AF37;
-            color: #0a0a0a;
-        }
-
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
-            margin: 40px 0;
-        }
-
-        .feature {
-            background: rgba(20, 20, 20, 0.8);
-            backdrop-filter: blur(10px);
-            padding: 40px 30px;
-            border-radius: 20px;
             text-align: center;
-            border: 1px solid rgba(212, 175, 55, 0.2);
             transition: all 0.3s;
         }
 
-        .feature:hover {
-            transform: translateY(-10px);
-            border-color: rgba(212, 175, 55, 0.5);
+        .user-type-btn.active {
+            background: #D4AF37;
+            color: #0a0a0a;
+            border-color: #D4AF37;
         }
 
-        .feature .icon { font-size: 48px; margin-bottom: 20px; }
-        .feature h3 { color: #D4AF37; margin-bottom: 15px; }
-        .feature p { color: rgba(255,255,255,0.6); }
+        .user-type-btn:hover {
+            border-color: #D4AF37;
+        }
 
         .form-container {
             max-width: 600px;
@@ -282,14 +187,14 @@
             background: #2980b9;
         }
 
-        .payment-group {
+        .payment-group, .service-group {
             background: rgba(0,0,0,0.3);
             border-radius: 10px;
             padding: 15px;
             margin: 10px 0;
         }
 
-        .payment-option {
+        .payment-option, .service-option {
             display: flex;
             align-items: center;
             gap: 10px;
@@ -300,17 +205,9 @@
             cursor: pointer;
         }
 
-        .payment-option input {
+        .payment-option input, .service-option input {
             width: auto;
             margin: 0;
-        }
-
-        .payment-option label {
-            flex: 1;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 10px;
         }
 
         .table-container {
@@ -337,8 +234,6 @@
             color: #D4AF37;
         }
 
-        td { color: rgba(255,255,255,0.8); }
-
         .badge {
             padding: 4px 12px;
             border-radius: 20px;
@@ -349,6 +244,7 @@
         .badge-pending { background: #f39c12; color: #0a0a0a; }
         .badge-accepted { background: #27ae60; color: white; }
         .badge-rejected { background: #e74c3c; color: white; }
+        .badge-matched { background: #8e44ad; color: white; }
 
         .btn-sm {
             padding: 5px 12px;
@@ -360,6 +256,7 @@
         .btn-success { background: #27ae60; }
         .btn-danger { background: #e74c3c; }
         .btn-info { background: #3498db; }
+        .btn-warning { background: #f39c12; }
 
         .stats-grid {
             display: grid;
@@ -411,80 +308,19 @@
             display: inline-block;
         }
 
-        .manual-location {
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid rgba(212, 175, 55, 0.3);
+        .match-card {
+            background: rgba(0,0,0,0.3);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid #D4AF37;
         }
 
-        .photo-preview {
-            width: 80px;
-            height: 80px;
-            border-radius: 12px;
-            object-fit: cover;
-            border: 2px solid #D4AF37;
-        }
-
-        .contact-section {
-            background: rgba(20, 20, 20, 0.8);
+        .distance-badge {
+            background: #3498db;
+            padding: 5px 10px;
             border-radius: 20px;
-            padding: 30px;
-            text-align: center;
-            margin-top: 40px;
-        }
-
-        .contact-section h3 {
-            color: #D4AF37;
-            margin-bottom: 20px;
-        }
-
-        .contact-buttons {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .contact-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            padding: 12px 24px;
-            border-radius: 50px;
-            text-decoration: none;
-            color: white;
-            font-weight: bold;
-            transition: all 0.3s;
-        }
-
-        .contact-btn:hover { transform: scale(1.05); }
-        .contact-btn-whatsapp { background: #25D366; }
-        .contact-btn-telegram { background: #0088cc; }
-        .contact-btn-email { background: #ea4335; }
-        .export-buttons {
-            display: flex;
-            gap: 10px;
-            margin: 20px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .location-well {
-            background: rgba(39,174,96,0.15);
-            border: 1px solid rgba(39,174,96,0.3);
-            border-radius: 10px;
-            padding: 12px;
-            margin: 10px 0;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .location-saved {
-            font-size: 13px;
-            color: #27ae60;
+            font-size: 12px;
         }
 
         @media (max-width: 768px) {
@@ -504,9 +340,9 @@
             </div>
         </div>
         <div class="nav-buttons" id="navButtons">
-            <button class="nav-btn" onclick="showPage('adminLogin')">👑 ADMINISTRATION</button>
-            <button class="nav-btn" onclick="showPage('candidateLogin')">👩‍🍳 ESPACE CANDIDATE</button>
-            <button class="nav-btn" onclick="showPage('candidateRegister')">📝 POSTULER</button>
+            <button class="nav-btn" onclick="showPage('adminLogin')">👑 ADMIN</button>
+            <button class="nav-btn" onclick="showRegister()">📝 S'INSCRIRE</button>
+            <button class="nav-btn" onclick="showLogin()">🔐 SE CONNECTER</button>
         </div>
         <div id="userInfo" style="display: none;">
             <span id="userNameDisplay" class="user-info"></span>
@@ -519,40 +355,54 @@
         <div id="homePage" class="page active">
             <div class="hero">
                 <h1>🧹 MENAGEPRO</h1>
-                <p>L'excellence au service de votre intérieur • Douala & Yaoundé</p>
+                <p>Mettez en relation propriétaires et femmes de ménage qualifiées • Douala & Yaoundé</p>
                 <div class="hero-buttons">
-                    <button class="hero-btn hero-btn-primary" onclick="showPage('adminLogin')">👑 ADMINISTRATION</button>
-                    <button class="hero-btn" onclick="showPage('candidateRegister')">📝 DEVENIR FEMME DE MÉNAGE</button>
-                    <button class="hero-btn" onclick="showPage('candidateLogin')">🔐 ESPACE CANDIDATE</button>
-                </div>
-            </div>
-            <div class="features">
-                <div class="feature"><div class="icon">📍</div><h3>GÉOLOCALISATION INTELLIGENTE</h3><p>Position mémorisée - Plus besoin de ressaisir !</p></div>
-                <div class="feature"><div class="icon">💰</div><h3>PAIEMENT MOBILE</h3><p>Orange Money & MTN Mobile Money</p></div>
-                <div class="feature"><div class="icon">⭐</div><h3>PROFESSIONNELLES QUALIFIÉES</h3><p>Toutes nos candidates sont vérifiées</p></div>
-            </div>
-            <div class="contact-section">
-                <h3>📞 CONTACT & SUPPORT</h3>
-                <div class="contact-buttons">
-                    <a href="https://wa.me/237692030989" target="_blank" class="contact-btn contact-btn-whatsapp"><i class="fab fa-whatsapp"></i> WhatsApp</a>
-                    <a href="https://t.me/+237677309639" target="_blank" class="contact-btn contact-btn-telegram"><i class="fab fa-telegram-plane"></i> Télégram</a>
-                    <a href="mailto:lefouestla@gmail.com" class="contact-btn contact-btn-email"><i class="fas fa-envelope"></i> Email</a>
+                    <button class="hero-btn hero-btn-primary" onclick="showPage('adminLogin')">👑 ADMIN</button>
+                    <button class="hero-btn" onclick="showRegister()">📝 S'INSCRIRE</button>
+                    <button class="hero-btn" onclick="showLogin()">🔐 SE CONNECTER</button>
                 </div>
             </div>
         </div>
 
-        <!-- LOGIN ADMIN -->
-        <div id="adminLoginPage" class="page">
+        <!-- CHOIX TYPE INSCRIPTION -->
+        <div id="registerChoicePage" class="page">
             <div class="form-container">
-                <h2>🔐 ADMINISTRATION</h2>
-                <form id="adminLoginForm">
-                    <input type="email" id="adminEmail" placeholder="Email" required>
-                    <input type="password" id="adminPassword" placeholder="Mot de passe" required>
+                <h2>📝 INSCRIPTION</h2>
+                <div class="user-type-selector">
+                    <div class="user-type-btn" onclick="setUserType('candidate')">
+                        <i class="fas fa-female"></i><br>Femme de ménage
+                    </div>
+                    <div class="user-type-btn" onclick="setUserType('owner')">
+                        <i class="fas fa-home"></i><br>Propriétaire
+                    </div>
+                </div>
+                <div id="registerFormContainer"></div>
+                <div style="text-align:center; margin-top:20px;">
+                    <a href="#" onclick="showLogin(); return false;" style="color:#D4AF37;">Déjà un compte ? Se connecter</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- CONNEXION -->
+        <div id="loginPage" class="page">
+            <div class="form-container">
+                <h2>🔐 CONNEXION</h2>
+                <div class="user-type-selector">
+                    <div class="user-type-btn" onclick="setLoginType('candidate')">
+                        <i class="fas fa-female"></i><br>Femme de ménage
+                    </div>
+                    <div class="user-type-btn" onclick="setLoginType('owner')">
+                        <i class="fas fa-home"></i><br>Propriétaire
+                    </div>
+                </div>
+                <form id="loginForm">
+                    <input type="email" id="loginEmail" placeholder="Email" required>
+                    <input type="password" id="loginPassword" placeholder="Mot de passe" required>
                     <button type="submit">SE CONNECTER</button>
                 </form>
-                <div id="adminLoginMsg" class="info-msg" style="display: none;"></div>
-                <div class="info-msg" style="margin-top: 15px;">
-                    🔐 Identifiants: admin@menagepro.com / admin123
+                <div id="loginMsg"></div>
+                <div style="text-align:center; margin-top:20px;">
+                    <a href="#" onclick="showRegister(); return false;" style="color:#D4AF37;">Pas encore inscrit ? Créer un compte</a>
                 </div>
             </div>
         </div>
@@ -563,138 +413,35 @@
                 <h2 style="color:#D4AF37;">👑 TABLEAU DE BORD</h2>
                 <button class="refresh-btn" onclick="loadAdminDashboard()"><i class="fas fa-sync-alt"></i> Actualiser</button>
             </div>
-            
-            <div class="export-buttons">
-                <button onclick="exporterDonnees()" style="background: #27ae60; width: auto; padding: 10px 20px;">
-                    📤 Exporter les données
-                </button>
-                <input type="file" id="importFichier" style="display:none;" accept=".json" onchange="importerDonnees(event)">
-                <button onclick="document.getElementById('importFichier').click()" style="background: #3498db; width: auto; padding: 10px 20px;">
-                    📥 Importer les données
-                </button>
-            </div>
-            
             <div class="stats-grid" id="adminStats"></div>
             
             <div class="table-container">
-                <h3 style="padding: 20px;">📍 CANDIDATES INSCRITES</h3>
-                <div style="padding: 0 20px 20px;">
-                    <input type="text" id="searchInput" placeholder="🔍 Rechercher..." style="max-width: 300px;">
-                </div>
+                <h3 style="padding: 20px;">👩‍🍳 CANDIDATES (Femmes de ménage)</h3>
                 <div style="overflow-x: auto;">
                     <table>
-                        <thead>
-                            <tr><th>Photo</th><th>Nom</th><th>Email</th><th>Téléphone</th><th>Ville</th><th>Paiement</th><th>Statut</th><th>Actions</th></tr>
-                        </thead>
+                        <thead><tr><th>Nom</th><th>Email</th><th>Téléphone</th><th>Ville</th><th>Statut</th><th>Actions</th></tr></thead>
                         <tbody id="adminCandidatesTable"></tbody>
                     </table>
                 </div>
             </div>
 
             <div class="table-container">
-                <h3 style="padding: 20px;">📋 MISSIONS</h3>
-                <div style="padding: 20px;">
-                    <div style="background: rgba(0,0,0,0.3); border-radius: 15px; padding: 20px;">
-                        <h4 style="color:#D4AF37;">➕ CRÉER UNE MISSION</h4>
-                        <input type="text" id="missionTitle" placeholder="Titre">
-                        <input type="text" id="missionAddress" placeholder="Adresse">
-                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-                            <input type="text" id="missionLat" placeholder="Latitude">
-                            <input type="text" id="missionLng" placeholder="Longitude">
-                        </div>
-                        <input type="number" id="missionBudget" placeholder="Budget FCFA">
-                        <button onclick="createMission()">📌 CRÉER</button>
-                    </div>
-                </div>
+                <h3 style="padding: 20px;">🏠 PROPRIÉTAIRES</h3>
                 <div style="overflow-x: auto;">
                     <table>
-                        <thead><tr><th>ID</th><th>Titre</th><th>Adresse</th><th>Budget</th><th>Statut</th><th>Actions</th></tr></thead>
-                        <tbody id="missionsTable"></tbody>
+                        <thead><tr><th>Nom</th><th>Email</th><th>Téléphone</th><th>Ville</th><th>Statut</th><th>Actions</th></tr></thead>
+                        <tbody id="adminOwnersTable"></tbody>
                     </table>
                 </div>
             </div>
-        </div>
 
-        <!-- INSCRIPTION CANDIDATE -->
-        <div id="candidateRegisterPage" class="page">
-            <div class="form-container">
-                <h2>📝 POSTULER</h2>
-                <form id="candidateRegisterForm">
-                    <input type="text" id="regNom" placeholder="Nom complet" required>
-                    <input type="email" id="regEmail" placeholder="Email" required>
-                    <input type="password" id="regPassword" placeholder="Mot de passe (6+)" required>
-                    <input type="tel" id="regTelephone" placeholder="Téléphone" required>
-                    <input type="number" id="regAge" placeholder="Âge" min="18" max="60" required>
-                    <input type="text" id="regVille" placeholder="Ville" required>
-                    <textarea id="regCompetences" rows="3" placeholder="Compétences"></textarea>
-                    
-                    <div class="payment-group">
-                        <h4 style="color:#D4AF37;">💰 MODE DE PAIEMENT</h4>
-                        <div class="payment-option">
-                            <input type="radio" name="paymentMethod" id="paymentOrange" value="orange_money" required>
-                            <label for="paymentOrange">📱 Orange Money - <input type="tel" id="orangeNumber" placeholder="6XXXXXXXX" style="width:140px; display:inline-block;"></label>
-                        </div>
-                        <div class="payment-option">
-                            <input type="radio" name="paymentMethod" id="paymentMTN" value="mtn_money" required>
-                            <label for="paymentMTN">📱 MTN Mobile Money - <input type="tel" id="mtnNumber" placeholder="6XXXXXXXX" style="width:140px; display:inline-block;"></label>
-                        </div>
-                    </div>
-
-                    <div style="margin: 20px 0; padding: 15px; background: rgba(212,175,55,0.08); border-radius: 12px;">
-                        <h4 style="color:#D4AF37;">📸 PHOTO OBLIGATOIRE</h4>
-                        <input type="file" id="regPhoto" accept="image/*" required>
-                        <div id="photoPreviewContainer" style="margin-top:10px; display:none;">
-                            <img id="photoPreview" class="photo-preview">
-                        </div>
-                    </div>
-
-                    <div style="margin: 20px 0; padding: 15px; background: rgba(52,152,219,0.1); border-radius: 10px;">
-                        <h4 style="color:#3498db;">📍 GÉOLOCALISATION INTELLIGENTE</h4>
-                        <p style="font-size: 13px; margin-bottom: 10px;">🔒 Une seule autorisation nécessaire - Votre position est sauvegardée automatiquement.</p>
-                        
-                        <button type="button" class="btn-location" onclick="getAndSaveCurrentLocation()">
-                            <i class="fas fa-location-dot"></i> 📍 Obtenir et sauvegarder ma position
-                        </button>
-                        
-                        <div id="locationStatus" class="info-msg" style="margin-top: 10px;"></div>
-                        
-                        <!-- Zone de position sauvegardée -->
-                        <div id="savedLocationDisplay" class="location-well" style="display: none;">
-                            <div>
-                                <i class="fas fa-check-circle" style="color:#27ae60;"></i>
-                                <span class="location-saved">📍 Position sauvegardée</span>
-                            </div>
-                            <button type="button" onclick="refreshLocation()" style="width: auto; padding: 5px 15px; margin: 0; background: #27ae60;">
-                                <i class="fas fa-sync-alt"></i> Rafraîchir
-                            </button>
-                        </div>
-                        
-                        <input type="hidden" id="regLatitude">
-                        <input type="hidden" id="regLongitude">
-                        <input type="text" id="regAddressDetail" placeholder="Adresse précise (quartier, rue...)" style="margin-top: 10px;">
-                    </div>
-                    
-                    <button type="submit">📝 ENVOYER MA CANDIDATURE</button>
-                </form>
-                <div id="registerMsg"></div>
-                <div style="text-align:center; margin-top:20px;">
-                    <a href="#" onclick="showPage('candidateLogin'); return false;" style="color:#D4AF37;">Déjà inscrite ? Se connecter</a>
-                </div>
-            </div>
-        </div>
-
-        <!-- LOGIN CANDIDATE -->
-        <div id="candidateLoginPage" class="page">
-            <div class="form-container">
-                <h2>🔐 ESPACE CANDIDATE</h2>
-                <form id="candidateLoginForm">
-                    <input type="email" id="candEmail" placeholder="Email" required>
-                    <input type="password" id="candPassword" placeholder="Mot de passe" required>
-                    <button type="submit">SE CONNECTER</button>
-                </form>
-                <div id="candidateLoginMsg"></div>
-                <div style="text-align:center; margin-top:20px;">
-                    <a href="#" onclick="showPage('candidateRegister'); return false;" style="color:#D4AF37;">Pas encore inscrite ? Postuler</a>
+            <div class="table-container">
+                <h3 style="padding: 20px;">🤝 MATCHES & DEMANDES</h3>
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead><tr><th>ID</th><th>Propriétaire</th><th>Candidate</th><th>Distance (km)</th><th>Statut</th><th>Actions</th></tr></thead>
+                        <tbody id="matchesTable"></tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -704,193 +451,133 @@
             <h2 style="color:#D4AF37;">👩‍🍳 MON ESPACE</h2>
             <div class="stats-grid">
                 <div class="stat-card"><div class="stat-number" id="candStatus">-</div><div>Statut</div></div>
-                <div class="stat-card"><div class="stat-number" id="missionsCount">0</div><div>Missions reçues</div></div>
+                <div class="stat-card"><div class="stat-number" id="candMatches">0</div><div>Demandes reçues</div></div>
             </div>
             <div class="table-container">
                 <h3 style="padding: 20px;">📋 MES INFORMATIONS</h3>
                 <div style="padding: 20px;" id="candidateInfo"></div>
             </div>
             <div class="table-container">
-                <h3 style="padding: 20px;">📍 MA POSITION</h3>
-                <div style="padding: 20px;" id="candidateLocationInfo"></div>
-                <button class="btn-location" style="width: auto; margin: 0 20px 20px 20px;" onclick="updateMyLocation()">
-                    <i class="fas fa-sync-alt"></i> Mettre à jour ma position
+                <h3 style="padding: 20px;">🤝 DEMANDES DE PROPRIÉTAIRES</h3>
+                <div id="candidateRequests" style="padding: 20px;"></div>
+            </div>
+        </div>
+
+        <!-- DASHBOARD OWNER -->
+        <div id="ownerDashboardPage" class="page">
+            <h2 style="color:#D4AF37;">🏠 MON ESPACE</h2>
+            <div class="stats-grid">
+                <div class="stat-card"><div class="stat-number" id="ownerStatus">-</div><div>Statut</div></div>
+                <div class="stat-card"><div class="stat-number" id="ownerMatches">0</div><div>Candidates trouvées</div></div>
+            </div>
+            <div class="table-container">
+                <h3 style="padding: 20px;">📋 MES INFORMATIONS</h3>
+                <div style="padding: 20px;" id="ownerInfo"></div>
+            </div>
+            <div class="table-container">
+                <h3 style="padding: 20px;">👩‍🍳 CANDIDATES DISPONIBLES PROCHES</h3>
+                <button class="btn-location" style="width: auto; margin: 0 20px 20px 20px;" onclick="findNearbyCandidates()">
+                    <i class="fas fa-search-location"></i> Trouver des candidates proches
                 </button>
+                <div id="nearbyCandidates" style="padding: 20px;"></div>
             </div>
         </div>
     </div>
 
     <footer>
         <p>© 2024 MENAGEPRO CAMEROUN • TOUS DROITS RÉSERVÉS</p>
-        <p>📧 lefouestla@gmail.com • 📱 WhatsApp: +237 692030989</p>
+        <p>Service de mise en relation • Géolocalisation • Notifications automatiques</p>
     </footer>
 
     <script>
-        // ==================== STOCKAGE LOCAL AVEC GÉOLOCALISATION PERSISTANTE ====================
-        let currentAdmin = null;
-        let currentCandidate = null;
-        const DEFAULT_LAT = 4.051056;
-        const DEFAULT_LNG = 9.767869;
+        // Configuration Supabase (À remplacer par vos identifiants)
+        const SUPABASE_URL = 'https://votre-projet.supabase.co';
+        const SUPABASE_ANON_KEY = 'votre-clé-anon';
+        
+        let supabase = null;
+        let currentUser = null;
+        let currentUserType = null;
+        let selectedUserType = null;
+        let selectedLoginType = null;
 
-        // Clé pour stocker la position dans localStorage
-        const SAVED_LOCATION_KEY = 'menagepro_saved_location';
-
-        function initData() {
-            let admins = localStorage.getItem('menagepro_admins');
-            if (!admins) {
-                localStorage.setItem('menagepro_admins', JSON.stringify([
-                    { id: 1, email: "admin@menagepro.com", password: "admin123", nom: "Super Admin" }
-                ]));
-            }
-            
-            let candidates = localStorage.getItem('menagepro_candidates');
-            if (!candidates) {
-                localStorage.setItem('menagepro_candidates', JSON.stringify([]));
-            }
-            
-            let missions = localStorage.getItem('menagepro_missions');
-            if (!missions) {
-                localStorage.setItem('menagepro_missions', JSON.stringify([
-                    { id: 1001, title: "Nettoyage appartement", address: "Bonamoussadi, Douala", budget: "15000", status: "available", latitude: 4.064292, longitude: 9.714674 },
-                    { id: 1002, title: "Ménage villa", address: "Bastos, Yaoundé", budget: "25000", status: "available", latitude: 3.866914, longitude: 11.512488 }
-                ]));
-            }
-            
-            // Charger la position sauvegardée si elle existe
-            loadSavedLocation();
-        }
-
-        // Charger la position sauvegardée
-        function loadSavedLocation() {
-            const savedLocation = localStorage.getItem(SAVED_LOCATION_KEY);
-            if (savedLocation) {
-                try {
-                    const location = JSON.parse(savedLocation);
-                    if (location.latitude && location.longitude) {
-                        document.getElementById('regLatitude').value = location.latitude;
-                        document.getElementById('regLongitude').value = location.longitude;
-                        showSavedLocationDisplay(location.latitude, location.longitude);
-                    }
-                } catch(e) {}
-            }
-        }
-
-        // Afficher la position sauvegardée
-        function showSavedLocationDisplay(lat, lng) {
-            const displayDiv = document.getElementById('savedLocationDisplay');
-            if (displayDiv) {
-                displayDiv.style.display = 'flex';
-                displayDiv.innerHTML = `
-                    <div>
-                        <i class="fas fa-check-circle" style="color:#27ae60;"></i>
-                        <span class="location-saved">📍 Position sauvegardée: ${lat.toFixed(6)}, ${lng.toFixed(6)}</span>
-                    </div>
-                    <button type="button" onclick="refreshLocation()" style="width: auto; padding: 5px 15px; margin: 0; background: #27ae60;">
-                        <i class="fas fa-sync-alt"></i> Rafraîchir
-                    </button>
-                `;
-            }
-            
-            const statusDiv = document.getElementById('locationStatus');
-            if (statusDiv) {
-                statusDiv.innerHTML = `✅ Position chargée automatiquement ! (${lat.toFixed(6)}, ${lng.toFixed(6)})`;
-                statusDiv.className = 'success-msg';
-            }
-        }
-
-        // Sauvegarder la position
-        function saveLocation(lat, lng) {
-            localStorage.setItem(SAVED_LOCATION_KEY, JSON.stringify({
-                latitude: lat,
-                longitude: lng,
-                savedAt: new Date().toISOString()
-            }));
-            document.getElementById('regLatitude').value = lat;
-            document.getElementById('regLongitude').value = lng;
-            showSavedLocationDisplay(lat, lng);
-        }
-
-        // Obtenir ET sauvegarder la position (une seule fois)
-        window.getAndSaveCurrentLocation = function() {
-            const statusDiv = document.getElementById('locationStatus');
-            statusDiv.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Récupération et sauvegarde de votre position...';
-            statusDiv.className = 'info-msg';
-            
-            if (!navigator.geolocation) {
-                statusDiv.innerHTML = '❌ Géolocalisation non supportée. Veuillez utiliser un navigateur récent.';
-                statusDiv.className = 'error-msg';
-                return;
-            }
-
-            navigator.geolocation.getCurrentPosition(
-                (pos) => {
-                    const lat = pos.coords.latitude;
-                    const lng = pos.coords.longitude;
-                    
-                    // Sauvegarder la position
-                    saveLocation(lat, lng);
-                    
-                    statusDiv.innerHTML = `✅ Position sauvegardée avec succès ! (${lat.toFixed(6)}, ${lng.toFixed(6)}) - Plus besoin de ressaisir !`;
-                    statusDiv.className = 'success-msg';
-                    
-                    // Deviner la ville approximative
-                    const ville = guessCityFromCoords(lat, lng);
-                    if (ville && document.getElementById('regVille').value === '') {
-                        document.getElementById('regVille').value = ville;
-                    }
-                },
-                (err) => {
-                    let msg = err.code === 1 ? 'Permission refusée. Activez la localisation dans votre navigateur.' : 'Position indisponible.';
-                    statusDiv.innerHTML = `❌ ${msg}`;
-                    statusDiv.className = 'error-msg';
-                },
-                { enableHighAccuracy: true, timeout: 10000 }
-            );
+        // Coordonnées des villes
+        const cityCoordinates = {
+            'douala': { lat: 4.051056, lng: 9.767869 },
+            'yaoundé': { lat: 3.848033, lng: 11.502075 },
+            'bafoussam': { lat: 5.480789, lng: 10.417631 }
         };
 
-        // Rafraîchir la position (réobtenir une position plus précise)
-        window.refreshLocation = function() {
-            const statusDiv = document.getElementById('locationStatus');
-            statusDiv.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Rafraîchissement de votre position...';
-            statusDiv.className = 'info-msg';
-            
-            if (!navigator.geolocation) {
-                statusDiv.innerHTML = '❌ Géolocalisation non supportée.';
-                statusDiv.className = 'error-msg';
+        // Initialisation Supabase
+        async function initSupabase() {
+            if (SUPABASE_URL.includes('votre-projet')) {
+                console.warn('⚠️ Configuration Supabase requise');
+                // Mode démo - stockage local
+                useLocalStorage();
                 return;
             }
-
-            navigator.geolocation.getCurrentPosition(
-                (pos) => {
-                    const lat = pos.coords.latitude;
-                    const lng = pos.coords.longitude;
-                    
-                    // Mettre à jour la position sauvegardée
-                    saveLocation(lat, lng);
-                    
-                    statusDiv.innerHTML = `✅ Position rafraîchie et sauvegardée ! (${lat.toFixed(6)}, ${lng.toFixed(6)})`;
-                    statusDiv.className = 'success-msg';
-                },
-                (err) => {
-                    statusDiv.innerHTML = `❌ Impossible de rafraîchir: ${err.message}`;
-                    statusDiv.className = 'error-msg';
-                },
-                { enableHighAccuracy: true, timeout: 10000 }
-            );
-        };
-
-        function guessCityFromCoords(lat, lng) {
-            const cities = {
-                'Douala': { lat: 4.051056, lng: 9.767869 },
-                'Yaoundé': { lat: 3.848033, lng: 11.502075 }
-            };
-            for (const [city, coords] of Object.entries(cities)) {
-                const dist = Math.hypot(lat - coords.lat, lng - coords.lng);
-                if (dist < 0.5) return city;
-            }
-            return null;
+            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            await createTables();
         }
 
+        function useLocalStorage() {
+            console.log('📦 Mode démo - stockage local');
+            initLocalData();
+        }
+
+        function initLocalData() {
+            if (!localStorage.getItem('candidates')) {
+                localStorage.setItem('candidates', JSON.stringify([]));
+            }
+            if (!localStorage.getItem('owners')) {
+                localStorage.setItem('owners', JSON.stringify([]));
+            }
+            if (!localStorage.getItem('matches')) {
+                localStorage.setItem('matches', JSON.stringify([]));
+            }
+            if (!localStorage.getItem('admin')) {
+                localStorage.setItem('admin', JSON.stringify({
+                    email: "admin@menagepro.com",
+                    password: "admin123",
+                    nom: "Super Admin"
+                }));
+            }
+        }
+
+        // ==================== NOTIFICATIONS ====================
+        async function sendWhatsApp(phone, message) {
+            const formattedPhone = phone.startsWith('6') ? '237' + phone : phone;
+            const whatsappUrl = `https://wa.me/${formattedPhone}?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+            return true;
+        }
+
+        async function sendSMS(phone, message) {
+            // Simulation SMS - En production, utilisez Twilio ou un service SMS
+            console.log(`📱 SMS à ${phone}: ${message}`);
+            alert(`📱 SMS simulé à ${phone}\nMessage: ${message}`);
+            return true;
+        }
+
+        async function sendEmail(email, subject, message) {
+            // Simulation Email - En production, utilisez EmailJS ou un serveur SMTP
+            console.log(`📧 Email à ${email}: ${subject} - ${message}`);
+            alert(`📧 Email simulé à ${email}\nSujet: ${subject}\nMessage: ${message}`);
+            return true;
+        }
+
+        async function sendNotifications(user, message, type) {
+            if (user.whatsapp && user.whatsapp !== 'non') {
+                await sendWhatsApp(user.telephone, message);
+            }
+            if (user.sms && user.sms !== 'non') {
+                await sendSMS(user.telephone, message);
+            }
+            if (user.email && user.email !== 'non') {
+                await sendEmail(user.email, type === 'candidate' ? '✅ Sélectionnée pour un poste' : '🏠 Une ménagère disponible', message);
+            }
+        }
+
+        // ==================== GÉOLOCALISATION ====================
         function calculateDistance(lat1, lon1, lat2, lon2) {
             const R = 6371;
             const dLat = (lat2 - lat1) * Math.PI / 180;
@@ -899,452 +586,704 @@
             return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
         }
 
-        // ==================== NAVIGATION ====================
+        function getCurrentPosition() {
+            return new Promise((resolve, reject) => {
+                if (!navigator.geolocation) {
+                    reject(new Error('Géolocalisation non supportée'));
+                    return;
+                }
+                navigator.geolocation.getCurrentPosition(resolve, reject, {
+                    enableHighAccuracy: true,
+                    timeout: 10000
+                });
+            });
+        }
+
+        // ==================== FORMULAIRES ====================
+        function showRegister() {
+            selectedUserType = null;
+            document.getElementById('registerChoicePage').classList.add('active');
+            document.getElementById('homePage').classList.remove('active');
+            document.getElementById('loginPage').classList.remove('active');
+            document.getElementById('adminDashboardPage').classList.remove('active');
+            document.getElementById('candidateDashboardPage').classList.remove('active');
+            document.getElementById('ownerDashboardPage').classList.remove('active');
+            document.getElementById('registerFormContainer').innerHTML = '';
+        }
+
+        function showLogin() {
+            selectedLoginType = null;
+            document.getElementById('loginPage').classList.add('active');
+            document.getElementById('homePage').classList.remove('active');
+            document.getElementById('registerChoicePage').classList.remove('active');
+            document.getElementById('adminDashboardPage').classList.remove('active');
+            document.getElementById('candidateDashboardPage').classList.remove('active');
+            document.getElementById('ownerDashboardPage').classList.remove('active');
+            document.getElementById('loginMsg').innerHTML = '';
+        }
+
+        function setUserType(type) {
+            selectedUserType = type;
+            const container = document.getElementById('registerFormContainer');
+            
+            if (type === 'candidate') {
+                container.innerHTML = `
+                    <form id="candidateRegisterForm">
+                        <input type="text" id="regNom" placeholder="Nom complet" required>
+                        <input type="email" id="regEmail" placeholder="Email" required>
+                        <input type="password" id="regPassword" placeholder="Mot de passe (6+)" required>
+                        <input type="tel" id="regTelephone" placeholder="Téléphone (ex: 690000000)" required>
+                        <input type="number" id="regAge" placeholder="Âge" min="18" max="60" required>
+                        <input type="text" id="regVille" placeholder="Ville" required>
+                        <textarea id="regCompetences" rows="3" placeholder="Compétences (nettoyage, repassage, cuisine...)"></textarea>
+                        <input type="number" id="regExperience" placeholder="Années d'expérience" step="0.5">
+                        
+                        <div class="payment-group">
+                            <h4 style="color:#D4AF37;">💰 MODE DE PAIEMENT</h4>
+                            <div class="payment-option">
+                                <input type="radio" name="paymentMethod" id="paymentOrange" value="orange_money" required>
+                                <label for="paymentOrange">📱 Orange Money - <input type="tel" id="orangeNumber" placeholder="6XXXXXXXX" style="width:140px; display:inline-block;"></label>
+                            </div>
+                            <div class="payment-option">
+                                <input type="radio" name="paymentMethod" id="paymentMTN" value="mtn_money" required>
+                                <label for="paymentMTN">📱 MTN Mobile Money - <input type="tel" id="mtnNumber" placeholder="6XXXXXXXX" style="width:140px; display:inline-block;"></label>
+                            </div>
+                        </div>
+
+                        <div class="payment-group">
+                            <h4 style="color:#D4AF37;">📨 NOTIFICATIONS</h4>
+                            <div class="payment-option">
+                                <input type="checkbox" id="notifWhatsapp" checked> WhatsApp
+                            </div>
+                            <div class="payment-option">
+                                <input type="checkbox" id="notifSMS"> SMS
+                            </div>
+                            <div class="payment-option">
+                                <input type="checkbox" id="notifEmail" checked> Email
+                            </div>
+                        </div>
+
+                        <div style="margin: 20px 0; padding: 15px; background: rgba(52,152,219,0.1); border-radius: 10px;">
+                            <h4 style="color:#3498db;">📍 GÉOLOCALISATION</h4>
+                            <button type="button" class="btn-location" onclick="getCandidateLocation()">
+                                <i class="fas fa-location-dot"></i> 📍 Obtenir ma position
+                            </button>
+                            <div id="locationStatus"></div>
+                            <input type="hidden" id="regLatitude">
+                            <input type="hidden" id="regLongitude">
+                            <input type="text" id="regAddressDetail" placeholder="Adresse précise">
+                        </div>
+                        
+                        <button type="submit">📝 S'INSCRIRE</button>
+                    </form>
+                `;
+                document.getElementById('candidateRegisterForm')?.addEventListener('submit', registerCandidate);
+            } else {
+                container.innerHTML = `
+                    <form id="ownerRegisterForm">
+                        <input type="text" id="regNom" placeholder="Nom complet" required>
+                        <input type="email" id="regEmail" placeholder="Email" required>
+                        <input type="password" id="regPassword" placeholder="Mot de passe (6+)" required>
+                        <input type="tel" id="regTelephone" placeholder="Téléphone (ex: 690000000)" required>
+                        <input type="text" id="regVille" placeholder="Ville" required>
+                        <textarea id="regDescription" rows="3" placeholder="Description de votre besoin (type de service, fréquence...)"></textarea>
+                        
+                        <div class="service-group">
+                            <h4 style="color:#D4AF37;">🏠 SERVICES RECHERCHÉS</h4>
+                            <div class="service-option"><input type="checkbox" value="nettoyage"> Nettoyage régulier</div>
+                            <div class="service-option"><input type="checkbox" value="repassage"> Repassage</div>
+                            <div class="service-option"><input type="checkbox" value="cuisine"> Cuisine</div>
+                            <div class="service-option"><input type="checkbox" value="vitrerie"> Vitrerie</div>
+                        </div>
+
+                        <div class="payment-group">
+                            <h4 style="color:#D4AF37;">📨 NOTIFICATIONS</h4>
+                            <div class="payment-option">
+                                <input type="checkbox" id="notifWhatsapp" checked> WhatsApp
+                            </div>
+                            <div class="payment-option">
+                                <input type="checkbox" id="notifSMS"> SMS
+                            </div>
+                            <div class="payment-option">
+                                <input type="checkbox" id="notifEmail" checked> Email
+                            </div>
+                        </div>
+
+                        <div style="margin: 20px 0; padding: 15px; background: rgba(52,152,219,0.1); border-radius: 10px;">
+                            <h4 style="color:#3498db;">📍 GÉOLOCALISATION</h4>
+                            <button type="button" class="btn-location" onclick="getOwnerLocation()">
+                                <i class="fas fa-location-dot"></i> 📍 Obtenir ma position
+                            </button>
+                            <div id="locationStatusOwner"></div>
+                            <input type="hidden" id="regLatitude">
+                            <input type="hidden" id="regLongitude">
+                            <input type="text" id="regAddressDetail" placeholder="Adresse précise">
+                        </div>
+                        
+                        <button type="submit">📝 S'INSCRIRE</button>
+                    </form>
+                `;
+                document.getElementById('ownerRegisterForm')?.addEventListener('submit', registerOwner);
+            }
+        }
+
+        function setLoginType(type) {
+            selectedLoginType = type;
+            document.getElementById('loginMsg').innerHTML = '';
+        }
+
+        // ==================== INSCRIPTIONS ====================
+        async function getCandidateLocation() {
+            const statusDiv = document.getElementById('locationStatus');
+            statusDiv.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Récupération...';
+            try {
+                const pos = await getCurrentPosition();
+                document.getElementById('regLatitude').value = pos.coords.latitude;
+                document.getElementById('regLongitude').value = pos.coords.longitude;
+                statusDiv.innerHTML = `✅ Position: ${pos.coords.latitude.toFixed(6)}, ${pos.coords.longitude.toFixed(6)}`;
+                statusDiv.className = 'success-msg';
+            } catch(err) {
+                statusDiv.innerHTML = `❌ ${err.message}`;
+                statusDiv.className = 'error-msg';
+            }
+        }
+
+        async function getOwnerLocation() {
+            const statusDiv = document.getElementById('locationStatusOwner');
+            statusDiv.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Récupération...';
+            try {
+                const pos = await getCurrentPosition();
+                document.getElementById('regLatitude').value = pos.coords.latitude;
+                document.getElementById('regLongitude').value = pos.coords.longitude;
+                statusDiv.innerHTML = `✅ Position: ${pos.coords.latitude.toFixed(6)}, ${pos.coords.longitude.toFixed(6)}`;
+                statusDiv.className = 'success-msg';
+            } catch(err) {
+                statusDiv.innerHTML = `❌ ${err.message}`;
+                statusDiv.className = 'error-msg';
+            }
+        }
+
+        async function registerCandidate(e) {
+            e.preventDefault();
+            
+            let paymentMethod = null, paymentNumber = null;
+            if (document.getElementById('paymentOrange')?.checked) {
+                paymentMethod = 'orange_money';
+                paymentNumber = document.getElementById('orangeNumber')?.value;
+            } else if (document.getElementById('paymentMTN')?.checked) {
+                paymentMethod = 'mtn_money';
+                paymentNumber = document.getElementById('mtnNumber')?.value;
+            }
+            
+            const latitude = parseFloat(document.getElementById('regLatitude')?.value);
+            const longitude = parseFloat(document.getElementById('regLongitude')?.value);
+            
+            if (!latitude || !longitude) {
+                document.getElementById('registerMsg')?.setHTML?.('<div class="error-msg">❌ Activez votre géolocalisation</div>');
+                alert('❌ Veuillez activer votre géolocalisation');
+                return;
+            }
+            
+            const candidate = {
+                id: Date.now(),
+                nom: document.getElementById('regNom')?.value,
+                email: document.getElementById('regEmail')?.value,
+                password: document.getElementById('regPassword')?.value,
+                telephone: document.getElementById('regTelephone')?.value,
+                age: parseInt(document.getElementById('regAge')?.value),
+                ville: document.getElementById('regVille')?.value,
+                competences: document.getElementById('regCompetences')?.value,
+                experience: parseFloat(document.getElementById('regExperience')?.value) || 0,
+                latitude, longitude,
+                addressDetail: document.getElementById('regAddressDetail')?.value,
+                paymentMethod, paymentNumber,
+                whatsapp: document.getElementById('notifWhatsapp')?.checked ? 'oui' : 'non',
+                sms: document.getElementById('notifSMS')?.checked ? 'oui' : 'non',
+                emailNotif: document.getElementById('notifEmail')?.checked ? 'oui' : 'non',
+                status: 'pending',
+                type: 'candidate',
+                dateInscription: new Date().toISOString()
+            };
+            
+            let candidates = JSON.parse(localStorage.getItem('candidates') || '[]');
+            if (candidates.some(c => c.email === candidate.email)) {
+                alert('❌ Cet email est déjà utilisé');
+                return;
+            }
+            
+            candidates.push(candidate);
+            localStorage.setItem('candidates', JSON.stringify(candidates));
+            alert('✅ Inscription réussie ! En attente de validation par l\'administrateur.');
+            showLogin();
+        }
+
+        async function registerOwner(e) {
+            e.preventDefault();
+            
+            const latitude = parseFloat(document.getElementById('regLatitude')?.value);
+            const longitude = parseFloat(document.getElementById('regLongitude')?.value);
+            
+            if (!latitude || !longitude) {
+                alert('❌ Veuillez activer votre géolocalisation');
+                return;
+            }
+            
+            const services = [];
+            document.querySelectorAll('.service-option input:checked').forEach(cb => services.push(cb.value));
+            
+            const owner = {
+                id: Date.now(),
+                nom: document.getElementById('regNom')?.value,
+                email: document.getElementById('regEmail')?.value,
+                password: document.getElementById('regPassword')?.value,
+                telephone: document.getElementById('regTelephone')?.value,
+                ville: document.getElementById('regVille')?.value,
+                description: document.getElementById('regDescription')?.value,
+                services: services,
+                latitude, longitude,
+                addressDetail: document.getElementById('regAddressDetail')?.value,
+                whatsapp: document.getElementById('notifWhatsapp')?.checked ? 'oui' : 'non',
+                sms: document.getElementById('notifSMS')?.checked ? 'oui' : 'non',
+                emailNotif: document.getElementById('notifEmail')?.checked ? 'oui' : 'non',
+                status: 'pending',
+                type: 'owner',
+                dateInscription: new Date().toISOString()
+            };
+            
+            let owners = JSON.parse(localStorage.getItem('owners') || '[]');
+            if (owners.some(o => o.email === owner.email)) {
+                alert('❌ Cet email est déjà utilisé');
+                return;
+            }
+            
+            owners.push(owner);
+            localStorage.setItem('owners', JSON.stringify(owners));
+            alert('✅ Inscription réussie ! En attente de validation par l\'administrateur.');
+            showLogin();
+        }
+
+        // ==================== CONNEXION ====================
+        async function login(email, password, type) {
+            if (email === 'admin@menagepro.com' && password === 'admin123') {
+                currentUser = { nom: 'Admin', type: 'admin' };
+                currentUserType = 'admin';
+                showPage('adminDashboard');
+                loadAdminDashboard();
+                return true;
+            }
+            
+            if (type === 'candidate') {
+                let candidates = JSON.parse(localStorage.getItem('candidates') || '[]');
+                const candidate = candidates.find(c => c.email === email && c.password === password);
+                if (candidate) {
+                    if (candidate.status === 'pending') {
+                        alert('⏳ Votre compte est en attente de validation');
+                        return false;
+                    }
+                    if (candidate.status === 'rejected') {
+                        alert('❌ Votre candidature a été refusée');
+                        return false;
+                    }
+                    currentUser = candidate;
+                    currentUserType = 'candidate';
+                    showPage('candidateDashboard');
+                    loadCandidateDashboard();
+                    return true;
+                }
+            } else if (type === 'owner') {
+                let owners = JSON.parse(localStorage.getItem('owners') || '[]');
+                const owner = owners.find(o => o.email === email && o.password === password);
+                if (owner) {
+                    if (owner.status === 'pending') {
+                        alert('⏳ Votre compte est en attente de validation');
+                        return false;
+                    }
+                    if (owner.status === 'rejected') {
+                        alert('❌ Votre inscription a été refusée');
+                        return false;
+                    }
+                    currentUser = owner;
+                    currentUserType = 'owner';
+                    showPage('ownerDashboard');
+                    loadOwnerDashboard();
+                    return true;
+                }
+            }
+            
+            alert('❌ Email ou mot de passe incorrect');
+            return false;
+        }
+
+        // ==================== DASHBOARD ADMIN ====================
+        function loadAdminDashboard() {
+            const candidates = JSON.parse(localStorage.getItem('candidates') || '[]');
+            const owners = JSON.parse(localStorage.getItem('owners') || '[]');
+            const matches = JSON.parse(localStorage.getItem('matches') || '[]');
+            
+            document.getElementById('adminStats').innerHTML = `
+                <div class="stat-card"><div class="stat-number">${candidates.filter(c => c.status === 'pending').length}</div><div>Candidates en attente</div></div>
+                <div class="stat-card"><div class="stat-number">${candidates.filter(c => c.status === 'accepted').length}</div><div>Candidates validées</div></div>
+                <div class="stat-card"><div class="stat-number">${owners.filter(o => o.status === 'pending').length}</div><div>Propriétaires en attente</div></div>
+                <div class="stat-card"><div class="stat-number">${owners.filter(o => o.status === 'accepted').length}</div><div>Propriétaires validés</div></div>
+            `;
+            
+            const candidatesTable = document.getElementById('adminCandidatesTable');
+            candidatesTable.innerHTML = candidates.map(c => `
+                <tr>
+                    <td>${c.nom}</td><td>${c.email}</td><td>${c.telephone}</td><td>${c.ville}</td>
+                    <td><span class="badge badge-${c.status}">${c.status === 'pending' ? 'En attente' : c.status === 'accepted' ? 'Validée' : 'Refusée'}</span></td>
+                    <td>
+                        <button class="btn-sm btn-info" onclick="viewCandidate(${c.id})">📋</button>
+                        ${c.status === 'pending' ? 
+                            `<button class="btn-sm btn-success" onclick="validateCandidate(${c.id})">✅ Valider</button>
+                             <button class="btn-sm btn-danger" onclick="rejectCandidate(${c.id})">❌ Refuser</button>` : ''}
+                    </td>
+                </tr>
+            `).join('');
+            
+            const ownersTable = document.getElementById('adminOwnersTable');
+            ownersTable.innerHTML = owners.map(o => `
+                <tr>
+                    <td>${o.nom}</td><td>${o.email}</td><td>${o.telephone}</td><td>${o.ville}</td>
+                    <td><span class="badge badge-${o.status}">${o.status === 'pending' ? 'En attente' : o.status === 'accepted' ? 'Validé' : 'Refusé'}</span></td>
+                    <td>
+                        <button class="btn-sm btn-info" onclick="viewOwner(${o.id})">📋</button>
+                        ${o.status === 'pending' ? 
+                            `<button class="btn-sm btn-success" onclick="validateOwner(${o.id})">✅ Valider</button>
+                             <button class="btn-sm btn-danger" onclick="rejectOwner(${o.id})">❌ Refuser</button>` : ''}
+                    </td>
+                </tr>
+            `).join('');
+            
+            const matchesTable = document.getElementById('matchesTable');
+            matchesTable.innerHTML = matches.map(m => {
+                const owner = owners.find(o => o.id === m.ownerId);
+                const candidate = candidates.find(c => c.id === m.candidateId);
+                return `
+                    <tr>
+                        <td>${m.id}</td>
+                        <td>${owner?.nom || '-'}</td>
+                        <td>${candidate?.nom || '-'}</td>
+                        <td>${m.distance?.toFixed(1) || '-'} km</td>
+                        <td><span class="badge badge-${m.status}">${m.status === 'pending' ? 'En attente' : m.status === 'accepted' ? 'Accepté' : 'Refusé'}</span></td>
+                        <td>
+                            ${m.status === 'pending' ? 
+                                `<button class="btn-sm btn-success" onclick="acceptMatch(${m.id})">✅ Accepter</button>
+                                 <button class="btn-sm btn-danger" onclick="rejectMatch(${m.id})">❌ Refuser</button>` : ''}
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        async function validateCandidate(id) {
+            let candidates = JSON.parse(localStorage.getItem('candidates') || '[]');
+            const index = candidates.findIndex(c => c.id === id);
+            if (index !== -1) {
+                candidates[index].status = 'accepted';
+                localStorage.setItem('candidates', JSON.stringify(candidates));
+                
+                const candidate = candidates[index];
+                await sendNotifications(candidate, 
+                    `🎉 Félicitations ${candidate.nom} ! Votre profil a été validé. Vous allez recevoir des demandes de propriétaires proches de chez vous.`,
+                    'candidate');
+                
+                alert('✅ Candidate validée et notifiée !');
+                loadAdminDashboard();
+            }
+        }
+
+        async function validateOwner(id) {
+            let owners = JSON.parse(localStorage.getItem('owners') || '[]');
+            const index = owners.findIndex(o => o.id === id);
+            if (index !== -1) {
+                owners[index].status = 'accepted';
+                localStorage.setItem('owners', JSON.stringify(owners));
+                
+                const owner = owners[index];
+                await sendNotifications(owner,
+                    `🏠 Bienvenue ${owner.nom} ! Votre compte a été validé. Vous pouvez maintenant trouver des femmes de ménage près de chez vous.`,
+                    'owner');
+                
+                alert('✅ Propriétaire validé et notifié !');
+                loadAdminDashboard();
+            }
+        }
+
+        async function acceptMatch(matchId) {
+            let matches = JSON.parse(localStorage.getItem('matches') || '[]');
+            const candidates = JSON.parse(localStorage.getItem('candidates') || '[]');
+            const owners = JSON.parse(localStorage.getItem('owners') || '[]');
+            
+            const matchIndex = matches.findIndex(m => m.id === matchId);
+            if (matchIndex !== -1) {
+                matches[matchIndex].status = 'accepted';
+                localStorage.setItem('matches', JSON.stringify(matches));
+                
+                const candidate = candidates.find(c => c.id === matches[matchIndex].candidateId);
+                const owner = owners.find(o => o.id === matches[matchIndex].ownerId);
+                
+                if (candidate && owner) {
+                    await sendNotifications(candidate,
+                        `✅ Félicitations ! Vous avez été sélectionnée par ${owner.nom} pour un poste de ménage à ${owner.addressDetail || owner.ville}. Contactez-le au ${owner.telephone}`,
+                        'candidate');
+                    
+                    await sendNotifications(owner,
+                        `🎉 Nous avons trouvé une ménagère pour vous ! ${candidate.nom} est disponible près de chez vous. Contactez-la au ${candidate.telephone}`,
+                        'owner');
+                    
+                    alert('✅ Match accepté ! Les deux parties ont été notifiées.');
+                }
+                
+                loadAdminDashboard();
+            }
+        }
+
+        // ==================== DASHBOARD CANDIDATE ====================
+        function loadCandidateDashboard() {
+            if (!currentUser) return;
+            
+            document.getElementById('candStatus').innerHTML = currentUser.status === 'accepted' ? '✅ Validée' : '⏳ En attente';
+            
+            const matches = JSON.parse(localStorage.getItem('matches') || '[]');
+            const myMatches = matches.filter(m => m.candidateId === currentUser.id && m.status === 'accepted');
+            document.getElementById('candMatches').innerHTML = myMatches.length;
+            
+            document.getElementById('candidateInfo').innerHTML = `
+                <div><strong>👤 Nom:</strong> ${currentUser.nom}</div>
+                <div><strong>📧 Email:</strong> ${currentUser.email}</div>
+                <div><strong>📱 Téléphone:</strong> ${currentUser.telephone}</div>
+                <div><strong>📍 Ville:</strong> ${currentUser.ville}</div>
+                <div><strong>⭐ Expérience:</strong> ${currentUser.experience || 0} ans</div>
+                <div><strong>🔧 Compétences:</strong> ${currentUser.competences || '-'}</div>
+            `;
+            
+            const requests = matches.filter(m => m.candidateId === currentUser.id && m.status === 'pending');
+            const requestsDiv = document.getElementById('candidateRequests');
+            if (requests.length === 0) {
+                requestsDiv.innerHTML = '<div class="info-msg">📭 Aucune demande pour le moment</div>';
+            } else {
+                const owners = JSON.parse(localStorage.getItem('owners') || '[]');
+                requestsDiv.innerHTML = requests.map(m => {
+                    const owner = owners.find(o => o.id === m.ownerId);
+                    return `
+                        <div class="match-card">
+                            <strong>🏠 ${owner?.nom}</strong><br>
+                            📍 ${owner?.addressDetail || owner?.ville}<br>
+                            📏 Distance: ${m.distance?.toFixed(1)} km<br>
+                            📝 Besoin: ${owner?.description?.substring(0, 100)}...<br>
+                            <button class="btn-sm btn-success" onclick="acceptRequest(${m.id})">✅ Accepter</button>
+                            <button class="btn-sm btn-danger" onclick="rejectRequest(${m.id})">❌ Refuser</button>
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
+
+        // ==================== DASHBOARD OWNER ====================
+        function loadOwnerDashboard() {
+            if (!currentUser) return;
+            
+            document.getElementById('ownerStatus').innerHTML = currentUser.status === 'accepted' ? '✅ Validé' : '⏳ En attente';
+            
+            const matches = JSON.parse(localStorage.getItem('matches') || '[]');
+            const myMatches = matches.filter(m => m.ownerId === currentUser.id && m.status === 'accepted');
+            document.getElementById('ownerMatches').innerHTML = myMatches.length;
+            
+            document.getElementById('ownerInfo').innerHTML = `
+                <div><strong>👤 Nom:</strong> ${currentUser.nom}</div>
+                <div><strong>📧 Email:</strong> ${currentUser.email}</div>
+                <div><strong>📱 Téléphone:</strong> ${currentUser.telephone}</div>
+                <div><strong>📍 Ville:</strong> ${currentUser.ville}</div>
+                <div><strong>📝 Besoin:</strong> ${currentUser.description || '-'}</div>
+            `;
+        }
+
+        async function findNearbyCandidates() {
+            if (!currentUser || !currentUser.latitude) {
+                alert('❌ Activez votre géolocalisation');
+                return;
+            }
+            
+            const candidates = JSON.parse(localStorage.getItem('candidates') || '[]');
+            const acceptedCandidates = candidates.filter(c => c.status === 'accepted' && c.latitude);
+            
+            const nearby = acceptedCandidates.map(c => ({
+                ...c,
+                distance: calculateDistance(currentUser.latitude, currentUser.longitude, c.latitude, c.longitude)
+            })).filter(c => c.distance <= 20).sort((a, b) => a.distance - b.distance);
+            
+            const container = document.getElementById('nearbyCandidates');
+            if (nearby.length === 0) {
+                container.innerHTML = '<div class="info-msg">📭 Aucune candidate disponible dans un rayon de 20km</div>';
+                return;
+            }
+            
+            container.innerHTML = nearby.map(c => `
+                <div class="match-card">
+                    <strong>👩‍🍳 ${c.nom}</strong><br>
+                    📍 ${c.addressDetail || c.ville}<br>
+                    📏 Distance: ${c.distance.toFixed(1)} km<br>
+                    ⭐ ${c.experience} ans d'expérience<br>
+                    🔧 ${c.competences?.substring(0, 80) || '-'}<br>
+                    <button class="btn-sm btn-success" onclick="sendRequest(${c.id})">📨 Envoyer une demande</button>
+                </div>
+            `).join('');
+        }
+
+        async function sendRequest(candidateId) {
+            const matches = JSON.parse(localStorage.getItem('matches') || '[]');
+            const candidates = JSON.parse(localStorage.getItem('candidates') || '[]');
+            const candidate = candidates.find(c => c.id === candidateId);
+            
+            const distance = calculateDistance(currentUser.latitude, currentUser.longitude, candidate.latitude, candidate.longitude);
+            
+            const newMatch = {
+                id: Date.now(),
+                ownerId: currentUser.id,
+                candidateId: candidateId,
+                ownerName: currentUser.nom,
+                candidateName: candidate.nom,
+                distance: distance,
+                status: 'pending',
+                createdAt: new Date().toISOString()
+            };
+            
+            matches.push(newMatch);
+            localStorage.setItem('matches', JSON.stringify(matches));
+            
+            await sendNotifications(candidate,
+                `📩 Vous avez reçu une demande de ${currentUser.nom} à ${currentUser.addressDetail || currentUser.ville} (${distance.toFixed(1)} km de chez vous). Connectez-vous à votre espace pour répondre.`,
+                'candidate');
+            
+            alert(`✅ Demande envoyée à ${candidate.nom} ! Elle sera notifiée.`);
+            findNearbyCandidates();
+        }
+
+        // ==================== NAVIGATION & UTILITAIRES ====================
         window.showPage = function(pageName) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             const target = document.getElementById(pageName + 'Page');
             if (target) target.classList.add('active');
-
+            
             const navButtons = document.getElementById('navButtons');
             const userInfo = document.getElementById('userInfo');
-
+            
             if (pageName === 'adminDashboard') {
                 navButtons.style.display = 'none';
                 userInfo.style.display = 'flex';
-                document.getElementById('userNameDisplay').innerHTML = `👑 ${currentAdmin?.nom || 'Admin'}`;
-                loadAdminDashboard();
-            } else if (pageName === 'candidateDashboard') {
+                document.getElementById('userNameDisplay').innerHTML = `👑 ${currentUser?.nom || 'Admin'}`;
+            } else if (pageName === 'candidateDashboard' || pageName === 'ownerDashboard') {
                 navButtons.style.display = 'none';
                 userInfo.style.display = 'flex';
-                document.getElementById('userNameDisplay').innerHTML = `👩‍🍳 ${currentCandidate?.nom || 'Candidate'}`;
-                loadCandidateDashboard();
+                document.getElementById('userNameDisplay').innerHTML = `${pageName === 'candidateDashboard' ? '👩‍🍳' : '🏠'} ${currentUser?.nom || ''}`;
             } else {
                 navButtons.style.display = 'flex';
                 userInfo.style.display = 'none';
             }
         };
-
+        
         window.logout = function() {
-            currentAdmin = null;
-            currentCandidate = null;
+            currentUser = null;
+            currentUserType = null;
             showPage('home');
         };
-
-        // ==================== ADMIN ====================
-        function loginAdmin(email, password) {
-            const admins = JSON.parse(localStorage.getItem('menagepro_admins') || '[]');
-            const admin = admins.find(a => a.email === email && a.password === password);
-            if (admin) { 
-                currentAdmin = admin; 
-                showPage('adminDashboard'); 
-                return true; 
-            }
-            return false;
-        }
-
-        window.loadAdminDashboard = function() {
-            const candidates = JSON.parse(localStorage.getItem('menagepro_candidates') || '[]');
-            const missions = JSON.parse(localStorage.getItem('menagepro_missions') || '[]');
-            
-            const pendingCount = candidates.filter(c => c.status === 'pending').length;
-            const acceptedCount = candidates.filter(c => c.status === 'accepted').length;
-            
-            document.getElementById('adminStats').innerHTML = `
-                <div class="stat-card" style="border-left:4px solid #f39c12;"><div class="stat-number">${pendingCount}</div><div>En attente</div></div>
-                <div class="stat-card" style="border-left:4px solid #27ae60;"><div class="stat-number">${acceptedCount}</div><div>Validées</div></div>
-                <div class="stat-card"><div class="stat-number">${candidates.length}</div><div>Total candidates</div></div>
-                <div class="stat-card"><div class="stat-number">${missions.filter(m => m.status === 'available').length}</div><div>Missions dispo</div></div>
-            `;
-            
-            renderAdminTable(candidates);
-            renderMissionsTable(missions);
+        
+        window.viewCandidate = function(id) {
+            const candidates = JSON.parse(localStorage.getItem('candidates') || '[]');
+            const c = candidates.find(c => c.id === id);
+            if (c) alert(`📋 CANDIDATE\nNom: ${c.nom}\nEmail: ${c.email}\nTél: ${c.telephone}\nVille: ${c.ville}\nCompétences: ${c.competences}`);
         };
         
-        function renderAdminTable(candidates) {
-            const tbody = document.getElementById('adminCandidatesTable');
-            if (!tbody) return;
-            
-            if (candidates.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;">Aucune candidate inscrite</td></tr>';
-                return;
-            }
-            
-            tbody.innerHTML = candidates.map(c => {
-                const paymentInfo = c.paymentMethod === 'orange_money' ? `🟠 Orange: ${c.paymentNumber}` : `🟡 MTN: ${c.paymentNumber}`;
-                const photoHtml = c.photo ? `<img src="${c.photo}" class="photo-preview" style="width:50px;height:50px;">` : '📷';
-                return `<tr>
-                    <td>${photoHtml}</td>
-                    <td><strong>${c.nom || '-'}</strong></td>
-                    <td>${c.email || '-'}</td>
-                    <td>${c.telephone || '-'}</td>
-                    <td>${c.ville || '-'}</td>
-                    <td>${paymentInfo}</td>
-                    <td><span class="badge badge-${c.status}">${c.status === 'pending' ? '⏳ En attente' : c.status === 'accepted' ? '✅ Validée' : '❌ Refusée'}</span></td>
-                    <td>
-                        <button class="btn-sm btn-info" onclick="viewDetails(${c.id})">📋</button>
-                        ${c.status === 'pending' ? 
-                            `<button class="btn-sm btn-success" onclick="updateStatus(${c.id}, 'accepted')">✅</button>
-                             <button class="btn-sm btn-danger" onclick="updateStatus(${c.id}, 'rejected')">❌</button>` : 
-                            c.status === 'accepted' ? 
-                                `<button class="btn-sm btn-danger" onclick="updateStatus(${c.id}, 'rejected')">❌</button>` : 
-                                `<button class="btn-sm btn-success" onclick="updateStatus(${c.id}, 'accepted')">✅</button>`
-                        }
-                    </td>
-                </tr>`;
-            }).join('');
-            
-            const searchInput = document.getElementById('searchInput');
-            if (searchInput) {
-                searchInput.oninput = (e) => {
-                    const term = e.target.value.toLowerCase();
-                    const filtered = candidates.filter(c => 
-                        c.nom?.toLowerCase().includes(term) || 
-                        c.email?.toLowerCase().includes(term) || 
-                        c.ville?.toLowerCase().includes(term)
-                    );
-                    renderAdminTable(filtered);
-                };
-            }
-        }
+        window.viewOwner = function(id) {
+            const owners = JSON.parse(localStorage.getItem('owners') || '[]');
+            const o = owners.find(o => o.id === id);
+            if (o) alert(`📋 PROPRIÉTAIRE\nNom: ${o.nom}\nEmail: ${o.email}\nTél: ${o.telephone}\nVille: ${o.ville}\nBesoin: ${o.description}`);
+        };
         
-        function renderMissionsTable(missions) {
-            const tbody = document.getElementById('missionsTable');
-            if (!tbody) return;
-            
-            tbody.innerHTML = missions.map(m => `<tr>
-                <td>${m.id.toString().slice(-6)}</td>
-                <td>${m.title}</td>
-                <td>${m.address}</td>
-                <td>${m.budget} FCFA</td>
-                <td><span class="badge ${m.status === 'available' ? 'badge-pending' : 'badge-accepted'}">${m.status === 'available' ? 'Disponible' : 'Assignée'}</span></td>
-                <td>${m.status === 'available' ? `<button class="btn-sm btn-success" onclick="assignMission(${m.id})">🎯 Assigner</button>` : '-'}</td>
-            </tr>`).join('');
-        }
-        
-        window.updateStatus = function(id, newStatus) {
-            let candidates = JSON.parse(localStorage.getItem('menagepro_candidates') || '[]');
+        window.rejectCandidate = function(id) {
+            let candidates = JSON.parse(localStorage.getItem('candidates') || '[]');
             const index = candidates.findIndex(c => c.id === id);
             if (index !== -1) {
-                candidates[index].status = newStatus;
-                localStorage.setItem('menagepro_candidates', JSON.stringify(candidates));
-                loadAdminDashboard();
-                alert(`Candidature ${newStatus === 'accepted' ? 'validée ✅' : 'refusée ❌'}`);
-            }
-        };
-        
-        window.viewDetails = function(id) {
-            let candidates = JSON.parse(localStorage.getItem('menagepro_candidates') || '[]');
-            const c = candidates.find(c => c.id === id);
-            if (!c) return;
-            alert(`📋 DÉTAILS COMPLET\n\n` +
-                `👤 Nom: ${c.nom}\n` +
-                `📧 Email: ${c.email}\n` +
-                `📱 Téléphone: ${c.telephone}\n` +
-                `🎂 Âge: ${c.age}\n` +
-                `📍 Ville: ${c.ville}\n` +
-                `🏠 Adresse: ${c.addressDetail || '-'}\n` +
-                `💰 Paiement: ${c.paymentMethod === 'orange_money' ? 'Orange Money' : 'MTN Mobile Money'} - ${c.paymentNumber}\n` +
-                `⭐ Expérience: ${c.experience || '-'} ans\n` +
-                `🔧 Compétences: ${c.competences || '-'}\n` +
-                `📊 Statut: ${c.status === 'pending' ? 'En attente' : c.status === 'accepted' ? 'Validée' : 'Refusée'}`);
-        };
-        
-        window.assignMission = function(missionId) {
-            let missions = JSON.parse(localStorage.getItem('menagepro_missions') || '[]');
-            let candidates = JSON.parse(localStorage.getItem('menagepro_candidates') || '[]');
-            let acceptedCandidates = candidates.filter(c => c.status === 'accepted');
-            
-            if (acceptedCandidates.length === 0) {
-                alert('❌ Aucune candidate validée');
-                return;
-            }
-            
-            const missionIndex = missions.findIndex(m => m.id === missionId);
-            if (missionIndex !== -1) {
-                missions[missionIndex].status = 'assigned';
-                missions[missionIndex].assignedTo = acceptedCandidates[0].nom;
-                localStorage.setItem('menagepro_missions', JSON.stringify(missions));
-                alert(`✅ Mission assignée à ${acceptedCandidates[0].nom}`);
+                candidates[index].status = 'rejected';
+                localStorage.setItem('candidates', JSON.stringify(candidates));
+                alert('❌ Candidate refusée');
                 loadAdminDashboard();
             }
         };
         
-        window.createMission = function() {
-            let missions = JSON.parse(localStorage.getItem('menagepro_missions') || '[]');
-            const lat = parseFloat(document.getElementById('missionLat').value) || DEFAULT_LAT;
-            const lng = parseFloat(document.getElementById('missionLng').value) || DEFAULT_LNG;
-            const newMission = {
-                id: Date.now(),
-                title: document.getElementById('missionTitle').value,
-                address: document.getElementById('missionAddress').value,
-                latitude: lat,
-                longitude: lng,
-                budget: document.getElementById('missionBudget').value,
-                status: 'available'
-            };
-            
-            if (!newMission.title || !newMission.address || !newMission.budget) {
-                alert('❌ Remplissez tous les champs');
-                return;
+        window.rejectOwner = function(id) {
+            let owners = JSON.parse(localStorage.getItem('owners') || '[]');
+            const index = owners.findIndex(o => o.id === id);
+            if (index !== -1) {
+                owners[index].status = 'rejected';
+                localStorage.setItem('owners', JSON.stringify(owners));
+                alert('❌ Propriétaire refusé');
+                loadAdminDashboard();
             }
-            
-            missions.push(newMission);
-            localStorage.setItem('menagepro_missions', JSON.stringify(missions));
-            alert('✅ Mission créée !');
-            document.getElementById('missionTitle').value = '';
-            document.getElementById('missionAddress').value = '';
-            document.getElementById('missionLat').value = '';
-            document.getElementById('missionLng').value = '';
-            document.getElementById('missionBudget').value = '';
-            loadAdminDashboard();
         };
-
-        // ==================== EXPORT/IMPORT ====================
-        window.exporterDonnees = function() {
-            const candidates = JSON.parse(localStorage.getItem('menagepro_candidates') || '[]');
-            const missions = JSON.parse(localStorage.getItem('menagepro_missions') || '[]');
-            const savedLocation = localStorage.getItem(SAVED_LOCATION_KEY);
-            const data = { candidates, missions, savedLocation: savedLocation ? JSON.parse(savedLocation) : null, exportDate: new Date().toISOString() };
-            
-            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `menagepro_backup_${new Date().toISOString().slice(0,19)}.json`;
-            a.click();
-            URL.revokeObjectURL(url);
-            alert('✅ Données exportées !');
-        };
-
-        window.importerDonnees = function(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                try {
-                    const data = JSON.parse(e.target.result);
-                    if (data.candidates) localStorage.setItem('menagepro_candidates', JSON.stringify(data.candidates));
-                    if (data.missions) localStorage.setItem('menagepro_missions', JSON.stringify(data.missions));
-                    if (data.savedLocation) localStorage.setItem(SAVED_LOCATION_KEY, JSON.stringify(data.savedLocation));
-                    alert('✅ Données importées !');
-                    location.reload();
-                } catch (error) {
-                    alert('❌ Fichier invalide');
-                }
-            };
-            reader.readAsText(file);
-        };
-
-        // ==================== CANDIDATE ====================
-        function registerCandidate(data, photoFile) {
-            let candidates = JSON.parse(localStorage.getItem('menagepro_candidates') || '[]');
-            if (candidates.some(c => c.email === data.email)) {
-                return { success: false, message: "Cet email est déjà utilisé" };
-            }
-            
-            if (!data.latitude || !data.longitude) {
-                return { success: false, message: "Veuillez obtenir et sauvegarder votre position" };
-            }
-            
-            let photoUrl = '';
-            if (photoFile) {
-                const reader = new FileReader();
-                reader.readAsDataURL(photoFile);
-                reader.onloadend = function() {
-                    data.photo = reader.result;
-                    candidates.push({ id: Date.now(), ...data, status: 'pending', dateInscription: new Date().toISOString() });
-                    localStorage.setItem('menagepro_candidates', JSON.stringify(candidates));
-                };
-                return { success: true, message: "✅ Inscription réussie ! En attente de validation." };
-            } else {
-                candidates.push({ id: Date.now(), ...data, status: 'pending', dateInscription: new Date().toISOString() });
-                localStorage.setItem('menagepro_candidates', JSON.stringify(candidates));
-                return { success: true, message: "✅ Inscription réussie ! En attente de validation." };
-            }
-        }
-
-        function loginCandidate(email, password) {
-            const candidates = JSON.parse(localStorage.getItem('menagepro_candidates') || '[]');
-            const candidate = candidates.find(c => c.email === email && c.password === password);
-            if (!candidate) return { success: false, message: "❌ Email ou mot de passe incorrect" };
-            if (candidate.status === 'pending') return { success: false, message: "⏳ Votre compte est en attente de validation" };
-            if (candidate.status === 'rejected') return { success: false, message: "❌ Votre candidature a été refusée" };
-            currentCandidate = candidate;
-            return { success: true, message: "✅ Connexion réussie" };
-        }
-
-        function loadCandidateDashboard() {
-            if (!currentCandidate) return;
-            
-            document.getElementById('candStatus').innerHTML = currentCandidate.status === 'accepted' ? '✅ Validée' : '⏳ En attente';
-            
-            let missions = JSON.parse(localStorage.getItem('menagepro_missions') || '[]');
-            let candidateMissions = missions.filter(m => m.assignedTo === currentCandidate.nom).length;
-            document.getElementById('missionsCount').innerHTML = candidateMissions;
-            
-            const paymentIcon = currentCandidate.paymentMethod === 'orange_money' ? '🟠 Orange Money' : '🟡 MTN Mobile Money';
-            
-            document.getElementById('candidateInfo').innerHTML = `
-                <div style="display:grid; gap:10px;">
-                    <div><strong>👤 Nom:</strong> ${currentCandidate.nom}</div>
-                    <div><strong>📧 Email:</strong> ${currentCandidate.email}</div>
-                    <div><strong>📱 Téléphone:</strong> ${currentCandidate.telephone}</div>
-                    <div><strong>🎂 Âge:</strong> ${currentCandidate.age} ans</div>
-                    <div><strong>📍 Ville:</strong> ${currentCandidate.ville}</div>
-                    <div><strong>💰 Paiement:</strong> ${paymentIcon} - ${currentCandidate.paymentNumber}</div>
-                    <div><strong>⭐ Expérience:</strong> ${currentCandidate.experience || '-'} an(s)</div>
-                    <div><strong>🔧 Compétences:</strong> ${currentCandidate.competences || '-'}</div>
-                    ${currentCandidate.status === 'accepted' ? 
-                        '<div style="margin-top:15px; background:rgba(39,174,96,0.2); padding:10px; border-radius:10px;">✅ Votre profil est actif ! Les missions vous seront assignées prochainement.</div>' : 
-                        '<div style="margin-top:15px; background:rgba(243,156,18,0.2); padding:10px; border-radius:10px;">⏳ En attente de validation...</div>'
-                    }
-                </div>
-            `;
-            
-            const locationDiv = document.getElementById('candidateLocationInfo');
-            if (currentCandidate.latitude && currentCandidate.longitude) {
-                locationDiv.innerHTML = `
-                    <i class="fas fa-check-circle" style="color:#27ae60;"></i><br>
-                    Latitude: ${currentCandidate.latitude.toFixed(6)}<br>
-                    Longitude: ${currentCandidate.longitude.toFixed(6)}<br>
-                    Adresse: ${currentCandidate.addressDetail || 'Non renseignée'}<br>
-                    <a href="https://www.google.com/maps?q=${currentCandidate.latitude},${currentCandidate.longitude}" target="_blank" style="color:#D4AF37;">🗺️ Voir sur Google Maps</a>
-                `;
-                locationDiv.className = 'success-msg';
-            } else {
-                locationDiv.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Aucune position définie.';
-                locationDiv.className = 'info-msg';
-            }
-        }
         
-        window.updateMyLocation = function() {
-            if (!currentCandidate) return;
-            const statusDiv = document.getElementById('candidateLocationInfo');
-            statusDiv.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mise à jour...';
-            
-            if (!navigator.geolocation) {
-                statusDiv.innerHTML = '❌ Géolocalisation non supportée';
-                return;
+        window.rejectMatch = function(id) {
+            let matches = JSON.parse(localStorage.getItem('matches') || '[]');
+            const index = matches.findIndex(m => m.id === id);
+            if (index !== -1) {
+                matches[index].status = 'rejected';
+                localStorage.setItem('matches', JSON.stringify(matches));
+                alert('❌ Demande refusée');
+                loadAdminDashboard();
             }
+        };
+        
+        window.acceptRequest = async function(matchId) {
+            let matches = JSON.parse(localStorage.getItem('matches') || '[]');
+            const candidates = JSON.parse(localStorage.getItem('candidates') || '[]');
+            const owners = JSON.parse(localStorage.getItem('owners') || '[]');
             
-            navigator.geolocation.getCurrentPosition(async (pos) => {
-                let candidates = JSON.parse(localStorage.getItem('menagepro_candidates') || '[]');
-                const index = candidates.findIndex(c => c.id === currentCandidate.id);
-                if (index !== -1) {
-                    candidates[index].latitude = pos.coords.latitude;
-                    candidates[index].longitude = pos.coords.longitude;
-                    localStorage.setItem('menagepro_candidates', JSON.stringify(candidates));
-                    currentCandidate = candidates[index];
-                    loadCandidateDashboard();
-                    alert('✅ Position mise à jour !');
+            const matchIndex = matches.findIndex(m => m.id === matchId);
+            if (matchIndex !== -1) {
+                matches[matchIndex].status = 'accepted';
+                localStorage.setItem('matches', JSON.stringify(matches));
+                
+                const candidate = candidates.find(c => c.id === matches[matchIndex].candidateId);
+                const owner = owners.find(o => o.id === matches[matchIndex].ownerId);
+                
+                if (candidate && owner) {
+                    await sendNotifications(owner,
+                        `✅ ${candidate.nom} a accepté votre demande ! Contactez-la au ${candidate.telephone}`,
+                        'owner');
+                    
+                    await sendNotifications(candidate,
+                        `🎉 Félicitations ! ${owner.nom} a confirmé votre sélection pour le poste à ${owner.addressDetail || owner.ville}. Contactez-le au ${owner.telephone}`,
+                        'candidate');
+                    
+                    alert('✅ Demande acceptée ! Les deux parties ont été notifiées.');
                 }
-            }, (err) => {
-                statusDiv.innerHTML = `❌ ${err.message}`;
-            });
+                
+                loadCandidateDashboard();
+            }
+        };
+        
+        window.rejectRequest = function(matchId) {
+            let matches = JSON.parse(localStorage.getItem('matches') || '[]');
+            const index = matches.findIndex(m => m.id === matchId);
+            if (index !== -1) {
+                matches[index].status = 'rejected';
+                localStorage.setItem('matches', JSON.stringify(matches));
+                alert('❌ Demande refusée');
+                loadCandidateDashboard();
+            }
         };
 
-        // ==================== PHOTO PREVIEW ====================
-        document.getElementById('regPhoto')?.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file) {
-                const preview = document.getElementById('photoPreview');
-                const container = document.getElementById('photoPreviewContainer');
-                preview.src = URL.createObjectURL(file);
-                container.style.display = 'block';
-            }
-        });
-
-        // ==================== EVENT LISTENERS ====================
-        document.getElementById('adminLoginForm')?.addEventListener('submit', (e) => {
+        // Écouteurs d'événements
+        document.getElementById('loginForm')?.addEventListener('submit', (e) => {
             e.preventDefault();
-            const msg = document.getElementById('adminLoginMsg');
-            if (loginAdmin(document.getElementById('adminEmail').value, document.getElementById('adminPassword').value)) {
-                msg.innerHTML = '✅ Connexion réussie !';
-                msg.className = 'success-msg';
-                msg.style.display = 'block';
-            } else {
-                msg.innerHTML = '❌ Identifiants incorrects';
-                msg.className = 'error-msg';
-                msg.style.display = 'block';
-            }
-        });
-
-        document.getElementById('candidateRegisterForm')?.addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            let paymentMethod = null, paymentNumber = null;
-            if (document.getElementById('paymentOrange').checked) {
-                paymentMethod = 'orange_money';
-                paymentNumber = document.getElementById('orangeNumber').value;
-            } else if (document.getElementById('paymentMTN').checked) {
-                paymentMethod = 'mtn_money';
-                paymentNumber = document.getElementById('mtnNumber').value;
-            }
-            
-            if (!paymentMethod || !paymentNumber) {
-                document.getElementById('registerMsg').innerHTML = '<div class="error-msg">❌ Choisissez un mode de paiement</div>';
-                return;
-            }
-            
-            if (paymentNumber.length < 9) {
-                document.getElementById('registerMsg').innerHTML = '<div class="error-msg">❌ Numéro de téléphone invalide (9 chiffres minimum)</div>';
-                return;
-            }
-            
-            const photoFile = document.getElementById('regPhoto').files[0];
-            
-            const data = {
-                nom: document.getElementById('regNom').value,
-                email: document.getElementById('regEmail').value,
-                password: document.getElementById('regPassword').value,
-                telephone: document.getElementById('regTelephone').value,
-                age: parseInt(document.getElementById('regAge').value),
-                ville: document.getElementById('regVille').value,
-                competences: document.getElementById('regCompetences').value,
-                latitude: parseFloat(document.getElementById('regLatitude').value),
-                longitude: parseFloat(document.getElementById('regLongitude').value),
-                addressDetail: document.getElementById('regAddressDetail').value,
-                paymentMethod, paymentNumber,
-                experience: 0
-            };
-            
-            if (data.password.length < 6) {
-                document.getElementById('registerMsg').innerHTML = '<div class="error-msg">❌ Mot de passe trop court (6+ caractères)</div>';
-                return;
-            }
-            
-            if (!data.latitude || !data.longitude) {
-                document.getElementById('registerMsg').innerHTML = '<div class="error-msg">❌ Veuillez obtenir et sauvegarder votre position (bouton ci-dessus)</div>';
-                return;
-            }
-            
-            const result = registerCandidate(data, photoFile);
-            const msgDiv = document.getElementById('registerMsg');
-            if (result.success) {
-                msgDiv.innerHTML = `<div class="success-msg">✅ ${result.message}</div>`;
-                document.getElementById('candidateRegisterForm').reset();
-                document.getElementById('photoPreviewContainer').style.display = 'none';
-                setTimeout(() => showPage('candidateLogin'), 2000);
-            } else {
-                msgDiv.innerHTML = `<div class="error-msg">❌ ${result.message}</div>`;
-            }
-        });
-
-        document.getElementById('candidateLoginForm')?.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const result = loginCandidate(document.getElementById('candEmail').value, document.getElementById('candPassword').value);
-            const msg = document.getElementById('candidateLoginMsg');
-            if (result.success) {
-                msg.innerHTML = `<div class="success-msg">✅ ${result.message}</div>`;
-                setTimeout(() => showPage('candidateDashboard'), 1000);
-            } else {
-                msg.innerHTML = `<div class="error-msg">❌ ${result.message}</div>`;
-            }
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            login(email, password, selectedLoginType);
         });
 
         // Initialisation
-        initData();
+        initLocalData();
     </script>
 </body>
 </html>
