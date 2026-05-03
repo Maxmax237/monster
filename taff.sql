@@ -104,6 +104,15 @@ ALTER TABLE candidates ADD COLUMN IF NOT EXISTS total_reviews INT DEFAULT 0;
 ALTER TABLE owners ADD COLUMN IF NOT EXISTS rating INT DEFAULT 0;
 ALTER TABLE owners ADD COLUMN IF NOT EXISTS total_reviews INT DEFAULT 0;
 
+-- Ajouter colonnes photo et sexe (obligatoires)
+ALTER TABLE candidates ADD COLUMN IF NOT EXISTS photo TEXT;
+ALTER TABLE candidates ADD COLUMN IF NOT EXISTS sexe TEXT CHECK (sexe IN ('F', 'M'));
+ALTER TABLE candidates ADD COLUMN IF NOT EXISTS payment_status TEXT DEFAULT 'pending';
+
+ALTER TABLE owners ADD COLUMN IF NOT EXISTS photo TEXT;
+ALTER TABLE owners ADD COLUMN IF NOT EXISTS sexe TEXT CHECK (sexe IN ('F', 'M'));
+ALTER TABLE owners ADD COLUMN IF NOT EXISTS payment_status TEXT DEFAULT 'pending';
+
 -- Insérer les catégories de services par défaut
 INSERT INTO service_categories (id, name, icon, description, color) VALUES
 (1, 'Ménage', '🧹', 'Nettoyage de maison, appartement, bureau', '#4A90E2'),

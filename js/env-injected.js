@@ -1,13 +1,12 @@
 /**
- * Variables d'environnement injectées automatiquement
- * Ce fichier est généré par scripts/inject-env.sh
- * Ne pas modifier manuellement
+ * Variables d'environnement - MenagePro
+ * Configuration pour production en ligne
  */
 window.ENV = {
-    SUPABASE_URL: null,
-    SUPABASE_ANON_KEY: null,
-    API_ENDPOINT: null,
-    ADMIN_EMAIL: null,
-    ADMIN_PASSWORD: null,
-    ENV: 'dev'
+    SUPABASE_URL: 'https://imehlftbduirseqjocxk.supabase.co',
+    SUPABASE_ANON_KEY: 'sb_publishable_jabNx1aY2Q3klwv8R-9o-w_CwDvHLV3',
+    API_ENDPOINT: 'https://api.menagepro.com',
+    ADMIN_EMAIL: 'admin@menagepro.com',
+    ADMIN_PASSWORD: 'admin123',
+    ENV: 'prod'
 };

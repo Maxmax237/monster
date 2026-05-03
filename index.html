@@ -355,6 +355,27 @@
             <div class="form-container">
                 <h2>📝 INSCRIPTION - FEMME DE MÉNAGE</h2>
                 <form id="candidateRegisterForm">
+                    <div style="margin: 15px 0; padding: 15px; background: rgba(212,175,55,0.1); border-radius: 10px; border: 2px dashed #D4AF37;">
+                        <h4 style="color:#D4AF37; margin-bottom: 10px;">📸 PHOTO DE PROFIL (OBLIGATOIRE)</h4>
+                        <input type="file" id="regPhoto" accept="image/*" required style="padding: 10px; background: white; border-radius: 5px;">
+                        <small style="color: #666;">Formats acceptés: JPG, PNG. Max 2MB</small>
+                        <div id="photoPreview" style="margin-top: 10px; display: none;">
+                            <img id="previewImg" style="max-width: 150px; max-height: 150px; border-radius: 10px; border: 2px solid #D4AF37;">
+                        </div>
+                    </div>
+                    
+                    <div style="margin: 15px 0; padding: 15px; background: rgba(212,175,55,0.1); border-radius: 10px;">
+                        <h4 style="color:#D4AF37; margin-bottom: 10px;">⚥ SEXE (OBLIGATOIRE)</h4>
+                        <div style="display: flex; gap: 20px;">
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                <input type="radio" name="regSexe" value="F" required> 👩 Femme
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                <input type="radio" name="regSexe" value="M" required> 👨 Homme
+                            </label>
+                        </div>
+                    </div>
+                    
                     <input type="text" id="regNom" placeholder="Nom complet" required>
                     <input type="email" id="regEmail" placeholder="Email" required>
                     <input type="password" id="regPassword" placeholder="Mot de passe (6+)" required>
@@ -417,6 +438,27 @@
             <div class="form-container">
                 <h2>📝 INSCRIPTION - PROPRIÉTAIRE</h2>
                 <form id="ownerRegisterForm">
+                    <div style="margin: 15px 0; padding: 15px; background: rgba(212,175,55,0.1); border-radius: 10px; border: 2px dashed #D4AF37;">
+                        <h4 style="color:#D4AF37; margin-bottom: 10px;">📸 PHOTO DE PROFIL (OBLIGATOIRE)</h4>
+                        <input type="file" id="regOwnerPhoto" accept="image/*" required style="padding: 10px; background: white; border-radius: 5px;">
+                        <small style="color: #666;">Formats acceptés: JPG, PNG. Max 2MB</small>
+                        <div id="ownerPhotoPreview" style="margin-top: 10px; display: none;">
+                            <img id="ownerPreviewImg" style="max-width: 150px; max-height: 150px; border-radius: 10px; border: 2px solid #D4AF37;">
+                        </div>
+                    </div>
+                    
+                    <div style="margin: 15px 0; padding: 15px; background: rgba(212,175,55,0.1); border-radius: 10px;">
+                        <h4 style="color:#D4AF37; margin-bottom: 10px;">⚥ SEXE (OBLIGATOIRE)</h4>
+                        <div style="display: flex; gap: 20px;">
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                <input type="radio" name="regOwnerSexe" value="F" required> 👩 Femme
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                <input type="radio" name="regOwnerSexe" value="M" required> 👨 Homme
+                            </label>
+                        </div>
+                    </div>
+                    
                     <input type="text" id="regOwnerNom" placeholder="Nom complet" required>
                     <input type="email" id="regOwnerEmail" placeholder="Email" required>
                     <input type="password" id="regOwnerPassword" placeholder="Mot de passe (6+)" required>
@@ -610,8 +652,47 @@
         }
 
         // ==================== INSCRIPTIONS SUPABASE ====================
+        // Photo preview handlers
+        document.getElementById('regPhoto')?.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('previewImg').src = e.target.result;
+                    document.getElementById('photoPreview').style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+        
+        document.getElementById('regOwnerPhoto')?.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('ownerPreviewImg').src = e.target.result;
+                    document.getElementById('ownerPhotoPreview').style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
         async function registerCandidate(e) {
             e.preventDefault();
+            
+            // Vérifier photo
+            const photoFile = document.getElementById('regPhoto').files[0];
+            if (!photoFile) {
+                document.getElementById('registerMsg').innerHTML = '<div class="error-msg">❌ Photo de profil obligatoire</div>';
+                return;
+            }
+            
+            // Vérifier sexe
+            const sexe = document.querySelector('input[name="regSexe"]:checked')?.value;
+            if (!sexe) {
+                document.getElementById('registerMsg').innerHTML = '<div class="error-msg">❌ Sexe obligatoire</div>';
+                return;
+            }
             
             let paymentMethod = null, paymentNumber = null;
             if (document.getElementById('paymentOrange').checked) {
@@ -626,15 +707,28 @@
             const longitude = parseFloat(document.getElementById('regLongitude').value);
             
             if (!paymentMethod || !paymentNumber) {
-                document.getElementById('registerMsg').innerHTML = '<div class="error-msg">❌ Choisissez un mode de paiement</div>';
+                document.getElementById('registerMsg').innerHTML = '<div class="error-msg">❌ Choisissez un mode de paiement (Orange Money ou MTN Mobile Money obligatoire)</div>';
                 return;
             }
             if (paymentNumber.length < 9) {
-                document.getElementById('registerMsg').innerHTML = '<div class="error-msg">❌ Numéro invalide (9 chiffres)</div>';
+                document.getElementById('registerMsg').innerHTML = '<div class="error-msg">❌ Numéro de paiement invalide (9 chiffres minimum)</div>';
                 return;
             }
             if (!latitude || !longitude) {
-                document.getElementById('registerMsg').innerHTML = '<div class="error-msg">❌ Activez votre géolocalisation</div>';
+                document.getElementById('registerMsg').innerHTML = '<div class="error-msg">❌ Activez votre géolocalisation pour Nkônfoulou</div>';
+                return;
+            }
+            
+            // Convertir photo en base64
+            let photoBase64 = null;
+            try {
+                photoBase64 = await new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onloadend = () => resolve(reader.result);
+                    reader.readAsDataURL(photoFile);
+                });
+            } catch(err) {
+                document.getElementById('registerMsg').innerHTML = '<div class="error-msg">❌ Erreur lors du traitement de la photo</div>';
                 return;
             }
             
@@ -645,14 +739,17 @@
                 password: document.getElementById('regPassword').value,
                 telephone: document.getElementById('regTelephone').value,
                 age: parseInt(document.getElementById('regAge').value),
+                sexe: sexe,
                 ville: document.getElementById('regVille').value,
                 experience: parseFloat(document.getElementById('regExperience').value),
                 competences: document.getElementById('regCompetences').value,
+                photo: photoBase64,
                 latitude: latitude,
                 longitude: longitude,
                 address_detail: document.getElementById('regAddressDetail').value,
                 payment_method: paymentMethod,
                 payment_number: paymentNumber,
+                payment_status: 'pending',
                 whatsapp: document.getElementById('notifWhatsapp').checked,
                 sms: document.getElementById('notifSMS').checked,
                 email_notif: document.getElementById('notifEmail').checked,
@@ -679,11 +776,38 @@
         async function registerOwner(e) {
             e.preventDefault();
             
+            // Vérifier photo
+            const photoFile = document.getElementById('regOwnerPhoto').files[0];
+            if (!photoFile) {
+                document.getElementById('ownerRegisterMsg').innerHTML = '<div class="error-msg">❌ Photo de profil obligatoire</div>';
+                return;
+            }
+            
+            // Vérifier sexe
+            const sexe = document.querySelector('input[name="regOwnerSexe"]:checked')?.value;
+            if (!sexe) {
+                document.getElementById('ownerRegisterMsg').innerHTML = '<div class="error-msg">❌ Sexe obligatoire</div>';
+                return;
+            }
+            
             const latitude = parseFloat(document.getElementById('regOwnerLatitude').value);
             const longitude = parseFloat(document.getElementById('regOwnerLongitude').value);
             
             if (!latitude || !longitude) {
-                document.getElementById('ownerRegisterMsg').innerHTML = '<div class="error-msg">❌ Activez votre géolocalisation</div>';
+                document.getElementById('ownerRegisterMsg').innerHTML = '<div class="error-msg">❌ Activez votre géolocalisation pour Nkônfoulou</div>';
+                return;
+            }
+            
+            // Convertir photo en base64
+            let photoBase64 = null;
+            try {
+                photoBase64 = await new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onloadend = () => resolve(reader.result);
+                    reader.readAsDataURL(photoFile);
+                });
+            } catch(err) {
+                document.getElementById('ownerRegisterMsg').innerHTML = '<div class="error-msg">❌ Erreur lors du traitement de la photo</div>';
                 return;
             }
             
@@ -693,11 +817,14 @@
                 email: document.getElementById('regOwnerEmail').value,
                 password: document.getElementById('regOwnerPassword').value,
                 telephone: document.getElementById('regOwnerTelephone').value,
+                sexe: sexe,
                 ville: document.getElementById('regOwnerVille').value,
                 description: document.getElementById('regOwnerDescription').value,
+                photo: photoBase64,
                 latitude: latitude,
                 longitude: longitude,
                 address_detail: document.getElementById('regOwnerAddressDetail').value,
+                payment_status: 'pending',
                 whatsapp: document.getElementById('ownerNotifWhatsapp').checked,
                 sms: document.getElementById('ownerNotifSMS').checked,
                 email_notif: document.getElementById('ownerNotifEmail').checked,
@@ -1159,12 +1286,12 @@
                     ...c,
                     distance: calculateDistance(currentUser.latitude, currentUser.longitude, c.latitude, c.longitude)
                 }))
-                .filter(c => c.distance <= 20)
+                .filter(c => c.distance <= 2)
                 .sort((a, b) => a.distance - b.distance);
             
             const container = document.getElementById('nearbyCandidatesList');
             if (nearby.length === 0) {
-                container.innerHTML = '<div class="info-msg">📭 Aucune candidate dans un rayon de 20km</div>';
+                container.innerHTML = '<div class="info-msg">📭 Aucune candidate dans un rayon de 2km autour de Nkônfoulou</div>';
                 return;
             }
             
