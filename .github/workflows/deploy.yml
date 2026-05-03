@@ -1,0 +1,83 @@
+name: Deploy MenagePro
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  # ==========================================
+  # TEST ENVIRONMENT
+  # ==========================================
+  deploy-staging:
+    if: github.ref == 'refs/heads/develop'
+    runs-on: ubuntu-latest
+    environment:
+      name: staging
+      url: https://staging.menagepro.com
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Inject Staging Environment
+        env:
+          SUPABASE_URL: ${{ secrets.STAGING_SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.STAGING_SUPABASE_ANON_KEY }}
+          ADMIN_EMAIL: ${{ secrets.STAGING_ADMIN_EMAIL }}
+          ADMIN_PASSWORD: ${{ secrets.STAGING_ADMIN_PASSWORD }}
+          API_ENDPOINT: ${{ secrets.STAGING_API_ENDPOINT }}
+        run: |
+          chmod +x ./scripts/inject-env.sh
+          ./scripts/inject-env.sh test
+
+      - name: Deploy to Vercel (Staging)
+        uses: vercel/action-deploy@v1
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID_STAGING }}
+
+  # ==========================================
+  # PRODUCTION ENVIRONMENT
+  # ==========================================
+  deploy-production:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://menagepro.com
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Inject Production Environment
+        env:
+          SUPABASE_URL: ${{ secrets.PROD_SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.PROD_SUPABASE_ANON_KEY }}
+          ADMIN_EMAIL: ${{ secrets.PROD_ADMIN_EMAIL }}
+          ADMIN_PASSWORD: ${{ secrets.PROD_ADMIN_PASSWORD }}
+          API_ENDPOINT: ${{ secrets.PROD_API_ENDPOINT }}
+        run: |
+          chmod +x ./scripts/inject-env.sh
+          ./scripts/inject-env.sh prod
+
+      - name: Deploy to Vercel (Production)
+        uses: vercel/action-deploy@v1
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID_PROD }}
+          production: true
