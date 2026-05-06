@@ -549,7 +549,7 @@
 
     <script>
         // ==================== INITIALISATION ====================
-        let supabase = null;
+        let supabaseClient = null;
         let currentUser = null;
         let currentUserType = null;
         let selectedLoginType = 'candidate';
@@ -559,7 +559,7 @@
         // Initialisation modulaire via CONFIG et SupabaseClient
         function initSupabase() {
             if (window.SupabaseClient) {
-                supabase = window.SupabaseClient.init();
+                supabaseClient = window.SupabaseClient.init();
                 return window.SupabaseClient.isReady();
             }
             // Fallback si les modules ne sont pas chargés
@@ -763,7 +763,7 @@
             }
             
             try {
-                const { error } = await supabase.from('candidates').insert([candidateData]);
+                const { error } = await supabaseClient.from('candidates').insert([candidateData]);
                 if (error) throw error;
                 document.getElementById('registerMsg').innerHTML = '<div class="success-msg">✅ Inscription réussie ! En attente de validation. L\'admin peut voir votre inscription sur n\'importe quel appareil.</div>';
                 document.getElementById('candidateRegisterForm').reset();
@@ -838,7 +838,7 @@
             }
             
             try {
-                const { error } = await supabase.from('owners').insert([ownerData]);
+                const { error } = await supabaseClient.from('owners').insert([ownerData]);
                 if (error) throw error;
                 document.getElementById('ownerRegisterMsg').innerHTML = '<div class="success-msg">✅ Inscription réussie ! En attente de validation.</div>';
                 document.getElementById('ownerRegisterForm').reset();
@@ -875,10 +875,10 @@
             }
             
             // Essayer Supabase d'abord
-            if (supabase) {
+            if (supabaseClient) {
                 try {
                     if (type === 'candidate') {
-                        const { data, error } = await supabase
+                        const { data, error } = await supabaseClient
                             .from('candidates')
                             .select('*')
                             .eq('email', email)
@@ -896,7 +896,7 @@
                             return true;
                         }
                     } else if (type === 'owner') {
-                        const { data, error } = await supabase
+                        const { data, error } = await supabaseClient
                             .from('owners')
                             .select('*')
                             .eq('email', email)
@@ -943,9 +943,9 @@
         // ==================== DASHBOARD ADMIN SUPABASE ====================
         async function loadAdminDashboard() {
             try {
-                const { data: candidates, error: candidatesError } = await supabase.from('candidates').select('*').order('date_inscription', { ascending: false });
-                const { data: owners, error: ownersError } = await supabase.from('owners').select('*').order('date_inscription', { ascending: false });
-                const { data: requests, error: requestsError } = await supabase.from('requests').select('*');
+                const { data: candidates, error: candidatesError } = await supabaseClient.from('candidates').select('*').order('date_inscription', { ascending: false });
+                const { data: owners, error: ownersError } = await supabaseClient.from('owners').select('*').order('date_inscription', { ascending: false });
+                const { data: requests, error: requestsError } = await supabaseClient.from('requests').select('*');
                 
                 if (candidatesError || ownersError) throw new Error('Erreur de chargement');
                 
@@ -1017,7 +1017,7 @@
 
         async function validateCandidate(id) {
             try {
-                const { data, error } = await supabase.from('candidates').update({ status: 'accepted' }).eq('id', id).select();
+                const { data, error } = await supabaseClient.from('candidates').update({ status: 'accepted' }).eq('id', id).select();
                 if (error) throw error;
                 if (data && data[0]) await sendNotifications(data[0], `🎉 Félicitations ! Votre profil a été validé. Vous allez recevoir des demandes.`, 'candidate');
                 alert('✅ Candidate validée et notifiée !');
@@ -1027,7 +1027,7 @@
 
         async function validateOwner(id) {
             try {
-                const { data, error } = await supabase.from('owners').update({ status: 'accepted' }).eq('id', id).select();
+                const { data, error } = await supabaseClient.from('owners').update({ status: 'accepted' }).eq('id', id).select();
                 if (error) throw error;
                 if (data && data[0]) await sendNotifications(data[0], `🏠 Votre compte a été validé ! Vous pouvez trouver des femmes de ménage.`, 'owner');
                 alert('✅ Propriétaire validé et notifié !');
@@ -1037,7 +1037,7 @@
 
         async function rejectCandidate(id) {
             try {
-                await supabase.from('candidates').update({ status: 'rejected' }).eq('id', id);
+                await supabaseClient.from('candidates').update({ status: 'rejected' }).eq('id', id);
                 alert('❌ Candidate refusée');
                 loadAdminDashboard();
             } catch(err) { alert('❌ Erreur: ' + err.message); }
@@ -1045,14 +1045,14 @@
 
         async function rejectOwner(id) {
             try {
-                await supabase.from('owners').update({ status: 'rejected' }).eq('id', id);
+                await supabaseClient.from('owners').update({ status: 'rejected' }).eq('id', id);
                 alert('❌ Propriétaire refusé');
                 loadAdminDashboard();
             } catch(err) { alert('❌ Erreur: ' + err.message); }
         }
 
         async function viewCandidate(id) {
-            const { data } = await supabase.from('candidates').select('*').eq('id', id);
+            const { data } = await supabaseClient.from('candidates').select('*').eq('id', id);
             if (data && data[0]) {
                 const c = data[0];
                 alert(`📋 CANDIDATE\nNom: ${c.nom}\nEmail: ${c.email}\nTél: ${c.telephone}\nVille: ${c.ville}\nPosition: ${c.latitude}, ${c.longitude}\nCompétences: ${c.competences}\nPaiement: ${c.payment_method === 'orange_money' ? 'Orange Money' : 'MTN Money'} - ${c.payment_number}`);
@@ -1060,7 +1060,7 @@
         }
 
         async function viewOwner(id) {
-            const { data } = await supabase.from('owners').select('*').eq('id', id);
+            const { data } = await supabaseClient.from('owners').select('*').eq('id', id);
             if (data && data[0]) {
                 const o = data[0];
                 alert(`📋 PROPRIÉTAIRE\nNom: ${o.nom}\nEmail: ${o.email}\nTél: ${o.telephone}\nVille: ${o.ville}\nBesoin: ${o.description}`);
@@ -1076,11 +1076,11 @@
             let owners = [];
             
             // Essayer Supabase d'abord
-            if (supabase) {
+            if (supabaseClient) {
                 try {
-                    const { data: reqData } = await supabase.from('requests').select('*').eq('candidate_id', currentUser.id);
+                    const { data: reqData } = await supabaseClient.from('requests').select('*').eq('candidate_id', currentUser.id);
                     if (reqData) requests = reqData;
-                    const { data: ownData } = await supabase.from('owners').select('*');
+                    const { data: ownData } = await supabaseClient.from('owners').select('*');
                     if (ownData) owners = ownData;
                 } catch(err) {
                     console.error('Erreur Supabase loadCandidateDashboard:', err);
@@ -1145,11 +1145,11 @@
 
         async function acceptRequest(requestId) {
             try {
-                const { data: request, error: reqError } = await supabase.from('requests').select('*').eq('id', requestId);
+                const { data: request, error: reqError } = await supabaseClient.from('requests').select('*').eq('id', requestId);
                 if (reqError) throw reqError;
-                await supabase.from('requests').update({ status: 'accepted' }).eq('id', requestId);
-                const { data: candidate } = await supabase.from('candidates').select('*').eq('id', request[0].candidate_id);
-                const { data: owner } = await supabase.from('owners').select('*').eq('id', request[0].owner_id);
+                await supabaseClient.from('requests').update({ status: 'accepted' }).eq('id', requestId);
+                const { data: candidate } = await supabaseClient.from('candidates').select('*').eq('id', request[0].candidate_id);
+                const { data: owner } = await supabaseClient.from('owners').select('*').eq('id', request[0].owner_id);
                 if (candidate && candidate[0]) await sendNotifications(candidate[0], `✅ ${owner[0].nom} a accepté votre demande ! Contactez-le au ${owner[0].telephone}`, 'candidate');
                 if (owner && owner[0]) await sendNotifications(owner[0], `🎉 ${candidate[0].nom} a accepté votre demande ! Contactez-la au ${candidate[0].telephone}`, 'owner');
                 alert('✅ Demande acceptée !');
@@ -1159,7 +1159,7 @@
 
         async function rejectRequest(requestId) {
             try {
-                await supabase.from('requests').update({ status: 'rejected' }).eq('id', requestId);
+                await supabaseClient.from('requests').update({ status: 'rejected' }).eq('id', requestId);
                 alert('❌ Demande refusée');
                 loadCandidateDashboard();
             } catch(err) { alert('❌ Erreur: ' + err.message); }
@@ -1169,7 +1169,7 @@
             if (!currentUser) return;
             try {
                 const pos = await getCurrentPosition();
-                await supabase.from('candidates').update({ latitude: pos.coords.latitude, longitude: pos.coords.longitude }).eq('id', currentUser.id);
+                await supabaseClient.from('candidates').update({ latitude: pos.coords.latitude, longitude: pos.coords.longitude }).eq('id', currentUser.id);
                 currentUser.latitude = pos.coords.latitude;
                 currentUser.longitude = pos.coords.longitude;
                 loadCandidateDashboard();
@@ -1189,11 +1189,11 @@
             let requests = [];
             let candidates = [];
             
-            if (supabase) {
+            if (supabaseClient) {
                 try {
-                    const { data: reqData } = await supabase.from('requests').select('*').eq('owner_id', currentUser.id);
+                    const { data: reqData } = await supabaseClient.from('requests').select('*').eq('owner_id', currentUser.id);
                     if (reqData) requests = reqData;
-                    const { data: candData } = await supabase.from('candidates').select('*');
+                    const { data: candData } = await supabaseClient.from('candidates').select('*');
                     if (candData) candidates = candData;
                 } catch(err) {
                     console.error('Erreur Supabase loadOwnerDashboard:', err);
@@ -1259,9 +1259,9 @@
             let candidates = [];
             
             // Essayer Supabase d'abord
-            if (supabase) {
+            if (supabaseClient) {
                 try {
-                    const { data, error } = await supabase.from('candidates').select('*').eq('status', 'accepted');
+                    const { data, error } = await supabaseClient.from('candidates').select('*').eq('status', 'accepted');
                     if (!error && data) candidates = data;
                 } catch(err) {
                     console.error('Erreur Supabase findNearby:', err);
@@ -1339,8 +1339,8 @@
                 };
                 
                 // Sauvegarder dans Supabase si disponible
-                if (supabase) {
-                    const { error } = await supabase.from('ratings').insert([ratingData]);
+                if (supabaseClient) {
+                    const { error } = await supabaseClient.from('ratings').insert([ratingData]);
                     if (error) throw error;
                 }
                 
@@ -1368,8 +1368,8 @@
                 let ratings = [];
                 
                 // Récupérer depuis Supabase
-                if (supabase) {
-                    const { data } = await supabase.from('ratings').select('*').eq('target_id', targetId).eq('target_type', targetType);
+                if (supabaseClient) {
+                    const { data } = await supabaseClient.from('ratings').select('*').eq('target_id', targetId).eq('target_type', targetType);
                     if (data) ratings = data;
                 }
                 
@@ -1385,8 +1385,8 @@
                 
                 // Mettre à jour la cible
                 const table = targetType === 'candidate' ? 'candidates' : 'owners';
-                if (supabase) {
-                    await supabase.from(table).update({ rating: avgRating }).eq('id', targetId);
+                if (supabaseClient) {
+                    await supabaseClient.from(table).update({ rating: avgRating }).eq('id', targetId);
                 }
                 
                 // Mettre à jour aussi dans localStorage
@@ -1405,8 +1405,8 @@
             try {
                 let ratings = [];
                 
-                if (supabase) {
-                    const { data } = await supabase.from('ratings').select('*').eq('target_id', targetId).eq('target_type', targetType);
+                if (supabaseClient) {
+                    const { data } = await supabaseClient.from('ratings').select('*').eq('target_id', targetId).eq('target_type', targetType);
                     if (data) ratings = data;
                 }
                 
@@ -1572,8 +1572,8 @@
                 };
                 
                 // Sauvegarder dans Supabase
-                if (supabase) {
-                    const { error } = await supabase.from('reviews').insert([reviewData]);
+                if (supabaseClient) {
+                    const { error } = await supabaseClient.from('reviews').insert([reviewData]);
                     if (error) console.warn('Supabase error:', error);
                 }
                 
@@ -1615,8 +1615,8 @@
                 
                 const table = targetType === 'candidate' ? 'candidates' : 'owners';
                 
-                if (supabase) {
-                    await supabase.from(table).update({ 
+                if (supabaseClient) {
+                    await supabaseClient.from(table).update({ 
                         rating: avgRating, 
                         total_reviews: totalReviews 
                     }).eq('id', targetId);
@@ -1639,8 +1639,8 @@
             try {
                 let reviews = [];
                 
-                if (supabase) {
-                    const { data } = await supabase.from('reviews')
+                if (supabaseClient) {
+                    const { data } = await supabaseClient.from('reviews')
                         .select('*')
                         .eq('target_id', targetId)
                         .eq('target_type', targetType)
@@ -1744,8 +1744,8 @@
                 let candidate = null;
                 
                 // Récupérer depuis Supabase
-                if (supabase) {
-                    const { data, error } = await supabase.from('candidates').select('*').eq('id', candidateId);
+                if (supabaseClient) {
+                    const { data, error } = await supabaseClient.from('candidates').select('*').eq('id', candidateId);
                     if (!error && data && data.length > 0) candidate = data[0];
                 }
                 
@@ -1771,8 +1771,8 @@
                 };
                 
                 // Sauvegarder dans Supabase
-                if (supabase) {
-                    const { error } = await supabase.from('requests').insert([newRequest]);
+                if (supabaseClient) {
+                    const { error } = await supabaseClient.from('requests').insert([newRequest]);
                     if (error) console.warn('Supabase error:', error);
                 }
                 
@@ -1795,9 +1795,9 @@
                 let target = null;
                 
                 // Récupérer depuis Supabase
-                if (supabase) {
+                if (supabaseClient) {
                     const table = targetType === 'candidate' ? 'candidates' : 'owners';
-                    const { data } = await supabase.from(table).select('*').eq('id', targetId);
+                    const { data } = await supabaseClient.from(table).select('*').eq('id', targetId);
                     if (data && data.length > 0) target = data[0];
                 }
                 
@@ -1868,8 +1868,8 @@
             try {
                 let reviews = [];
                 
-                if (supabase) {
-                    const { data } = await supabase.from('reviews').select('*').order('created_at', { ascending: false });
+                if (supabaseClient) {
+                    const { data } = await supabaseClient.from('reviews').select('*').order('created_at', { ascending: false });
                     if (data) reviews = data;
                 }
                 
@@ -1888,10 +1888,10 @@
                 
                 // Récupérer les infos des utilisateurs
                 let candidates = [], owners = [];
-                if (supabase) {
-                    const { data: c } = await supabase.from('candidates').select('id,nom');
+                if (supabaseClient) {
+                    const { data: c } = await supabaseClient.from('candidates').select('id,nom');
                     if (c) candidates = c;
-                    const { data: o } = await supabase.from('owners').select('id,nom');
+                    const { data: o } = await supabaseClient.from('owners').select('id,nom');
                     if (o) owners = o;
                 }
                 
@@ -1946,8 +1946,8 @@
         async function moderateReview(reviewId, status) {
             try {
                 // Mettre à jour dans Supabase
-                if (supabase) {
-                    await supabase.from('reviews').update({ status }).eq('id', reviewId);
+                if (supabaseClient) {
+                    await supabaseClient.from('reviews').update({ status }).eq('id', reviewId);
                 }
                 
                 // Mettre à jour dans localStorage
@@ -1976,8 +1976,8 @@
             
             try {
                 // Supprimer de Supabase
-                if (supabase) {
-                    await supabase.from('reviews').delete().eq('id', reviewId);
+                if (supabaseClient) {
+                    await supabaseClient.from('reviews').delete().eq('id', reviewId);
                 }
                 
                 // Supprimer de localStorage
@@ -2048,8 +2048,8 @@
         });
 
         // ==================== DÉMARRAGE ====================
-        const supabaseOk = initSupabase();
-        if (!supabaseOk) {
+        const supabaseClientOk = initSupabase();
+        if (!supabaseClientOk) {
             console.warn('⚠️ SUPABASE NON CONFIGURÉ - Mode démo/local uniquement');
         }
         
